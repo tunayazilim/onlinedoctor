@@ -1,0 +1,6 @@
+{% autoescape off %}  
+Merhaba {{ user.username }},  
+Kaydınızı tamamlamak için linke tıklayınız
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}  
+Eğer bu siz değilseniz mesajı dikkate almayınız
+{% endautoescape %}

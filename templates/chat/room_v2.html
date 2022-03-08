@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body_class %}chat-page{% endblock %}
+
+{% block content %}
+	
+
+	
+
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xl-12">
+							<div class="chat-window">
+							
+								<!-- Chat Left -->
+								<div class="chat-cont-left">
+									<div class="chat-header">
+										<span>Chats</span>
+										<a href="javascript:void(0)" class="chat-compose">
+											<i class="material-icons">control_point</i>
+										</a>
+									</div>
+									<form class="chat-search">
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<i class="fas fa-search"></i>
+											</div>
+											<input type="text" class="form-control" placeholder="Search">
+										</div>
+									</form>
+									<div class="chat-users-list">
+										<div class="chat-scroll">
+											{% for user in users %}
+											
+													<a class="media 
+												{% if forloop.counter0 == 0 %}
+												read-chat active
+												{% endif %}
+													" href="javascript:void(0);" onclick="runChatUser('{{ user.slug }}');" >
+													<div class="media-img-wrap">
+														<div class="avatar avatar-away">
+															<img src="{% static 'assets/img/patients/patient.jpg' %}" alt="User Image" class="avatar-img rounded-circle">
+														</div>
+													</div>
+													<div class="media-body">
+														<div>
+															<div class="user-name">{{user.get_full_name}}</div>
+															<div class="user-last-chat">Hey, How are you?</div>
+														</div>
+														<div>
+															<div class="last-chat-time block">2 min</div>
+															<div class="badge badge-success badge-pill">15</div>
+														</div>
+													</div>
+												</a>
+												
+											{% endfor %}
+										
+										
+										
+										
+										</div>
+									</div>
+								</div>
+								<!-- /Chat Left -->
+								
+								<!-- Chat Right -->
+								<div class="chat-cont-right">
+									<div class="chat-header">
+										<a id="back_user_list" href="javascript:void(0)" class="back-user-list">
+											<i class="material-icons">chevron_left</i>
+										</a>
+										<div class="media">
+											<div class="media-img-wrap">
+												<div class="avatar avatar-online">
+													<img src="assets/img/patients/patient.jpg" alt="User Image" class="avatar-img rounded-circle">
+												</div>
+											</div>
+											<div class="media-body">
+												<div class="user-name">Richard Wilson</div>
+												<div class="user-status">online</div>
+											</div>
+										</div>
+										<div class="chat-options">
+											<a href="javascript:void(0)" data-toggle="modal" data-target="#voice_call">
+												<i class="material-icons">local_phone</i>
+											</a>
+											<a href="javascript:void(0)" data-toggle="modal" data-target="#video_call">
+												<i class="material-icons">videocam</i>
+											</a>
+											<a href="javascript:void(0)">
+												<i class="material-icons">more_vert</i>
+											</a>
+										</div>
+									</div>
+
+
+
+
+
+									
+
+
+										<!-- style heighy düzenle telefonlar için bozuk  !!!!! -->
+									<div class="chat-body" style="height: 78%;">   
+										<div class="chat-scroll">
+											<ul class="list-unstyled" id="conversation">
+												
+												
+												
+												
+											</ul> 
+										</div>
+									</div>
+									
+									<div class="chat-footer" >
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<div class="btn-file btn">
+													<i class="fa fa-paperclip"></i>
+													<input type="file">
+												</div>
+											</div>
+											<input type="text" class="input-msg-send form-control" placeholder="Type something" id="message-input-chat">
+											<div class="input-group-append">
+												<button type="button" id="sendMessage" class="btn msg-send-btn"><i class="fab fa-telegram-plane"></i></button>
+											</div>
+										</div>
+									</div>
+
+									<!-- {{ room_name|json_script:"room-name" }} -->
+								</div>
+								<!-- /Chat Right -->
+								
+							</div>
+						</div>
+					</div>
+					<!-- /Row -->
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			
+		
+
+			{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+		
+	  

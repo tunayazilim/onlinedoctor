@@ -1,0 +1,112 @@
+
+		{% extends 'baseAdmin.html' %}
+
+		
+		{% block content %}
+			
+
+			
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col">
+								<h3 class="page-title">Data Tables</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item active">Data Tables</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+
+
+
+					{% if messages %}
+					<ul class="messages">
+						{% for message in messages %}
+			
+						{% if message.tags == "error" %}
+						<div class="alert alert-danger" role="alert">
+			
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% else %}
+						<div class="alert alert-success" role="alert">
+			
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% endif %}
+			
+			
+			
+						{% endfor %}    
+					</ul>
+					{% endif %}
+
+					
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">Mevcut Sayfalar</h4>
+									<!-- <p>
+										This is the most basic example of the datatables with zero configuration. Use the <code>.datatable</code> class to initialize datatables.
+									</p> --> <br>
+									<a href="{% url 'createPageModel' %}" class="btn btn-success">Yeni Ekle</a>
+								</div>
+								<div class="card-body">
+
+									<div class="table-responsive">
+										<table class="datatable table table-stripped">
+											<thead>
+												<tr>
+													<th>Title</th>
+													<th>Description</th>
+													<th>Keywords</th>
+													<th class="text-right">Actions</th>
+													
+												</tr>
+											</thead>
+											<tbody>
+												
+												
+												{% if pages %}
+													{% for page in pages %}
+														<tr>
+															<td>{{page.meta_title}}</td>
+															<td>{{page.meta_description}}</td>
+															<td>{{page.meta_keywords}}</td>
+															<td class="text-right">
+																<div class="actions">
+																	
+																	<a  href="{% url 'updatePageModel' page.pk %}" class="btn btn-sm bg-success-light mr-2">
+																		<i class="fe fe-pencil"></i> Edit
+																	</a>
+																	<a  onclick="return confirm('Bu sayfa moodelini silmek istediğinizden emin misiniz?');" class="btn btn-sm bg-danger-light"  href="{% url 'deletePage' page.pk %}">
+																		<i class="fe fe-trash"></i> Delete
+																	</a>
+																</div>
+															</td>
+															
+														</tr>
+													{% endfor %}
+												{% endif %}
+													
+													
+											
+
+
+												
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+		
+					{% endblock content %}

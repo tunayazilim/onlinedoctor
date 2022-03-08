@@ -1,0 +1,104 @@
+
+		{% extends 'baseAdmin.html' %}
+
+		
+		{% block content %}
+			
+		
+			
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">
+								{{appointmentType}}
+									</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Anasayfa</a></li>
+									<li class="breadcrumb-item active">{{appointmentType}}</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+
+					
+					
+
+
+
+					<div class="row">
+						<div class="col-md-12">
+						
+							<!-- Recent Orders -->
+							<div class="card">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="datatable table table-hover table-center mb-0">
+											<thead>
+												<tr>
+													<th>Doktor Adı</th>
+													<th>Alanları</th>
+													<th>Hasta Adı</th>
+													<th>Randevu Zamanı</th>
+													<th>Görüşülen Süre</th>
+													<!-- <th>Durum</th> -->
+													<th class="text-right">Miktar</th>
+												</tr>
+											</thead>
+											<tbody>
+
+
+
+												
+												{% for schedule in schedules %}
+													<tr>
+														<td>
+															<h2 class="table-avatar">
+																<a href="{% url 'showDoctorAdmin' schedule.doctor.slug %}" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{schedule.doctor.image.url}}" alt="User Image"></a>
+																<a href="{% url 'showDoctorAdmin' schedule.doctor.slug %}">{{schedule.doctor.get_doctor_name}}</a>
+															</h2>
+														</td>
+														<td>{{schedule.doctor.specializations|truncatechars:45}}</td>
+														<td>
+															<h2 class="table-avatar">
+																<a href="{% url 'showDoctorAdmin' schedule.patient.slug %}" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{schedule.patient.image.url}}" alt="User Image"></a>
+																<a href="{% url 'showDoctorAdmin' schedule.patient.slug %}">{{schedule.patient.get_full_name}} </a>
+															</h2>
+														</td>
+														<td>{{schedule.date}}<span class="text-primary d-block">{{schedule.starting_time}}-{{schedule.finishing_time}}</span></td>
+														<!-- <td>
+															<div class="status-toggle">
+																<input type="checkbox" id="status_1" class="check" checked>
+																<label for="status_1" class="checktoggle">checkbox</label>
+															</div>
+														</td> -->
+														<td>
+															{{schedule.totalDuration|time:"H:i:s"}} <br>
+															(Saat-dk-saniye) 
+														</td>
+														<td class="text-right">
+															{{schedule.money}}₺
+														</td>
+													</tr>
+												{% endfor %}
+													
+											
+										
+											
+												
+											
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!-- /Recent Orders -->
+							
+						</div>
+					</div>
+			
+		
+					{% endblock content %}

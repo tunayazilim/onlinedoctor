@@ -1,0 +1,116 @@
+
+		{% extends 'baseAdmin.html' %}
+
+		
+		{% block content %}
+			
+
+			
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col">
+								<h3 class="page-title">Veri Tablosu</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Anasayfa</a></li>
+									<li class="breadcrumb-item active">Veri Tablosu</li>
+								</ul>
+							</div>
+							<div class="col-sm-5 col">
+								<a href="{% url 'createBannerModel' %}"  class="btn btn-primary float-right mt-2">Yeni Ekle</a>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+
+
+
+					{% if messages %}
+					<ul class="messages">
+						{% for message in messages %}
+			
+						{% if message.tags == "error" %}
+						<div class="alert alert-danger" role="alert">
+			
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% else %}
+						<div class="alert alert-success" role="alert">
+			
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% endif %}
+			
+			
+			
+						{% endfor %}    
+					</ul>
+					{% endif %}
+
+					
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">Banner Kısmı</h4>
+									<!-- <p>
+										This is the most basic example of the datatables with zero configuration. Use the <code>.datatable</code> class to initialize datatables.
+									</p> --> 
+									
+								</div>
+								<div class="card-body">
+
+									<div class="table-responsive">
+										<table class="datatable table table-stripped">
+											<thead>
+												<tr>
+													<th>Site Banner Üst Başlık </th>
+													<th>Site Banner Alt Başlık </th>
+			
+													<th class="text-right">İşlemler</th>
+													
+												</tr>
+											</thead>
+											<tbody>
+												
+												
+												{% if banners %}
+													{% for banner in banners %}
+														<tr>
+															
+															<td>{{banner.top_title}}</td>
+															<td>{{banner.bottom_title}}</td>
+                                                           
+															<td class="text-right">
+																<div class="actions">
+																	<a class="btn btn-sm bg-success-light" href="{% url 'updateBannerModel' banner.pk %}">
+																		<i class="fe fe-pencil"></i> Düzenle
+																	</a>
+																
+																	<a  onclick="return confirm('Bu banneri silmek istediğinizden emin misiniz?');" class="btn btn-sm bg-danger-light"  href="{% url 'deleteBanner' banner.pk %}">
+																		<i class="fe fe-trash"></i> Sil
+																	</a>
+																</div>
+															</td>
+															
+														</tr>
+													{% endfor %}
+												{% endif %}
+													
+													
+											
+
+
+												
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+		
+					{% endblock content %}

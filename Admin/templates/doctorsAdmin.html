@@ -1,0 +1,122 @@
+
+		{% extends 'baseAdmin.html' %}
+
+		
+		{% block content %}
+			
+
+			
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col">
+								<h3 class="page-title">Veri Tablosu</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Anasayfa</a></li>
+									<li class="breadcrumb-item active">Veri Tablosu</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+
+
+
+					{% if messages %}
+					<ul class="messages">
+						{% for message in messages %}
+			
+						{% if message.tags == "error" %}
+						<div class="alert alert-danger" role="alert">
+			
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% else %}
+						<div class="alert alert-success" role="alert">
+			
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% endif %}
+			
+			
+			
+						{% endfor %}    
+					</ul>
+					{% endif %}
+
+					
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">Mevcut Doktorlar</h4>
+									<!-- <p>
+										This is the most basic example of the datatables with zero configuration. Use the <code>.datatable</code> class to initialize datatables.
+									</p> --> 
+									
+								</div>
+								<div class="card-body">
+
+									<div class="table-responsive">
+										<table class="datatable table table-stripped">
+											<thead>
+												<tr>
+													<th>Adı Soyadı</th>
+													<th>Mail Adresi</th>
+													<th>Telefon</th>
+                                                    <th>Belge</th>
+													<th>Kimlik</th>
+													<th class="text-right">İşlemler</th>
+													
+												</tr>
+											</thead>
+											<tbody>
+												
+												
+												{% if doctors %}
+													{% for doctor in doctors %}
+														<tr>
+															<td>
+                                                                <h2 class="table-avatar">
+                                                                    <a href="{% url 'showDoctorAdmin' doctor.slug %}" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{doctor.image.url}}" alt="User Image"></a>
+                                                                    <a href="{% url 'showDoctorAdmin' doctor.slug %}">{{doctor.get_full_name}}</a>
+                                                                </h2>
+                                                            </td>
+															<td>{{doctor.email}}</td>
+															<td>{{doctor.phone_number}}</td>
+                                                            <td><a href="{{doctor.file.url}}">{{doctor.file|truncatechars:30}}</a></td>
+															<td><a href="
+															{% if doctor.kimlik %}
+															{{doctor.kimlik.url}}
+															{% endif %}
+																">{{doctor.kimlik|truncatechars:30}}</a></td>
+															<td class="text-right">
+																<div class="actions">
+																
+																	<a  onclick="return confirm('Bu doktoru silmek istediğinizden emin misiniz?');" class="btn btn-sm bg-danger-light"  href="{% url 'deleteWaitingDoctor' doctor.pk %}">
+																		<i class="fe fe-trash"></i> Reddet
+																	</a>
+																</div>
+															</td>
+															
+														</tr>
+													{% endfor %}
+												{% endif %}
+													
+													
+											
+
+
+												
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+		
+					{% endblock content %}

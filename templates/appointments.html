@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+
+{% load static %}
+
+
+
+
+{% block content %}
+
+
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+	<div class="container-fluid">
+		<div class="row align-items-center">
+			<div class="col-md-12 col-12">
+				<nav aria-label="breadcrumb" class="page-breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="index-2.html">Anasayfa</a></li>
+						<li class="breadcrumb-item active" aria-current="page">
+						{% if past %}
+							Geçmiş
+						{% elif deleted %}
+							İptal Edilen
+						{% endif %}
+							Randevular</li>
+					</ol>
+				</nav>
+				<h2 class="breadcrumb-title">{% if past %}
+					Geçmiş
+					{% elif deleted %}
+					İptal Edilen
+				{% endif %} Randevular</h2>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Breadcrumb -->
+
+<!-- Page Content -->
+<div class="content">
+	<div class="container-fluid">
+
+		<div class="row">
+			<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+				{% include 'doctor-profile-sidebar.html' %}
+
+
+			</div>
+
+			<div class="col-md-7 col-lg-8 col-xl-9">
+				<div class="appointments">
+
+
+					{{ details|json_script:"tags-data" }}
+
+
+
+
+
+					{% if messages %}
+					<ul class="messages">
+						{% for message in messages %}
+
+						{% if 'error' in message.tags %}
+						<div class="alert alert-danger" role="alert">
+
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% elif 'success' in message.tags %}
+						<div class="alert alert-success" role="alert">
+
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% endif %}
+
+
+
+						{% endfor %}
+					</ul>
+					{% endif %}
+
+
+					{% if schedules %}
+				
+					{% for schedule in schedules %}
+					<div class="appointment-list">
+						<div class="profile-info-widget">
+							<a href="" class="booking-doc-img">
+								<img src="{{schedule.patient.image.url}}" alt="User Image">
+							</a>
+							<div class="profile-det-info">
+								<h3><a href="">{{schedule.patient.get_full_name}}</a></h3>
+								<div class="patient-details">
+									<h5><i class="far fa-clock"></i> {{schedule.date}}, ({{schedule.starting_time}}-{{schedule.finishing_time}}) , 
+									{% if schedule.meeting_method == "ourSystem" %}
+										Kendi Sistemimiz
+									{% else %}
+										{{schedule.meeting_method}}
+									{% endif %}
+										</h5>
+									<h5><i class="fas fa-map-marker-alt"></i> {{schedule.patient.city}},
+										{{schedule.patient.state}}</h5>
+									<h5><i class="fas fa-envelope"></i> {{schedule.patient.email}}</h5>
+									<h5 class="mb-0"><i class="fas fa-phone"></i> {{schedule.patient.phone_number}}</h5>
+									
+								</div>
+							</div>
+						</div>
+
+						
+						<div class="appointment-action">
+							<a href="#" onclick="getInformations('{{forloop.counter0}}');" class="btn btn-sm bg-info-light" data-toggle="modal"
+									data-target="#appt_details">
+									<i class="far fa-eye"></i> Görüntüle
+								</a>
+							
+							{% if now %}
+								{% if schedule.status == "pending" %}
+									<a href="{% url 'acceptAppointment' schedule.pk %}" class="btn btn-sm bg-success-light">
+										<i class="fas fa-check"></i> Kabul Et
+									</a>
+									<a href="{% url 'deleteAppointment' schedule.pk %}" class="btn btn-sm bg-danger-light">
+										<i class="fas fa-times"></i> İptal Et
+									</a>
+								{% elif schedule.status == "confirm"%}
+									<a class="btn btn-sm bg-success-light">
+										<i class="fas fa-check"></i> Onaylandı
+									</a>
+		
+								{% endif %}
+							{% elif past %}
+								<a class="btn btn-sm bg-success-light">
+									<i class="fas fa-check"></i> Onaylandı
+								</a>
+							{% elif deleted %}
+								<a class="btn btn-sm bg-danger-light">
+									<i class="fas fa-check"></i> Reddedildi
+								</a>
+							{% endif %}
+								
+							
+								
+							
+						</div>
+						
+
+					</div>
+					{% endfor %}
+					{% else %}
+					<center>
+						
+						{% if now %}
+						<p>Henüz bir randevu isteğiniz bulunmamaktadır</p>
+						{% elif past %}
+						<p>Henüz geçmiş bir randevunuz bulunmamaktadır</p>
+						{% elif deleted %} 
+						<p>Henüz iptal edilen bir randevunuz bulunmamaktadır</p>
+						{% endif %}
+							
+						
+					</center>
+					{% endif %}
+
+
+
+					
+
+
+					<!-- /Appointment List -->
+
+				
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<!-- /Page Content -->
+
+
+
+<script>
+
+	var tags = JSON.parse(document.getElementById('tags-data').textContent);
+	
+
+
+	function getInformations(index){			//randevularda görüntüle kısmı için çalışır
+		
+
+		document.getElementById("randevuPk").textContent="#"+tags[index].pk;
+		document.getElementById("randevuDate").textContent=tags[index].date;
+		document.getElementById("randevuMoney").textContent=tags[index].money;
+		document.getElementById("randevuStatus").textContent=tags[index].status;
+		document.getElementById("randevuMeetingType").textContent=tags[index].meeting_method;
+		document.getElementById("randevuMeetingAddress").textContent=tags[index].address;
+		document.getElementById("randevuStatusButton").textContent=tags[index].status;
+		if(tags[index].status=="Reddedildi"){
+			document.getElementById("randevuStatusButton").className="btn bg-danger-light btn-sm"
+		}else if(tags[index].status=="Bekliyor"){
+			document.getElementById("randevuStatusButton").className="btn bg-warning-light btn-sm"
+		}
+
+
+	}
+
+
+
+
+</script>
+
+
+
+
+{% endblock content %}

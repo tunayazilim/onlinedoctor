@@ -1,0 +1,52 @@
+
+
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+	
+
+
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Anasayfa</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Açıklama</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Açıklama</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container">
+					<div class="row">
+						<div class="col-12">
+							<div class="terms-content">
+								<div class="terms-text">
+									<h3>{{aciklamaYazisi.top_title}}</h3>
+									<p>{{aciklamaYazisi.bottom_title}} </p>
+									<p>{{aciklamaYazisi.yazi|safe}}</p>
+								</div>
+								
+							
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+
+
+			{% endblock content %}

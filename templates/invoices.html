@@ -1,0 +1,126 @@
+
+		{% extends 'base.html' %}
+
+
+		
+		{% block content %}
+			
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Anasayfa</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Faturalar</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Faturalar</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+
+							{% include 'doctor-profile-sidebar.html' %}		
+							
+						</div>
+						
+						<div class="col-md-7 col-lg-8 col-xl-9">
+							{% if schedules %}
+							<div class="card card-table">
+								<div class="card-body">														
+
+									<!-- Invoice Table -->
+									<div class="table-responsive">
+										<table class="table table-hover table-center mb-0">
+											<thead>
+												<tr>
+													<th>Fatura No</th>
+													<th>Danışan</th>
+													<th>Miktar</th>
+													<th>Tarih</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+
+
+
+												
+												
+												
+													{% for schedule in schedules %}
+														<tr>
+															<td>
+																<a href="{% url 'invoicesView' schedule.pk %}">#INV-{{schedule.pk}}</a>
+															</td>
+															<td>
+																<h2 class="table-avatar">
+																	<a href="" class="avatar avatar-sm mr-2">
+																		<img class="avatar-img rounded-circle" src="{{schedule.patient.image.url}}" alt="User Image">
+																	</a>
+																	<a href="">{{schedule.patient.get_full_name}} <span>#PT{{schedule.patient.pk}}</span></a>
+																</h2>
+															</td>
+															<td>
+															{% if schedule.money != 0 %}
+																{{schedule.money}}₺
+															{% else %}
+																Ücretsiz
+															{% endif %}
+																</td>
+															<td>{{schedule.date}}</td>
+															<td class="text-right">
+																<div class="table-action">
+																	<a href="{% url 'invoicesView' schedule.pk %}"  class="btn btn-sm bg-info-light">
+																		<i class="far fa-eye"></i> Görüntüle
+																	</a>
+																	<a href="javascript:void(0);" class="btn btn-sm bg-primary-light">
+																		<i class="fas fa-print"></i> Bastır
+																	</a>
+																</div>
+															</td>
+														</tr>
+													{% endfor %}
+													
+													
+													
+
+												
+												
+												
+											</tbody>
+										</table>
+									</div>
+									<!-- /Invoice Table -->
+
+									
+									
+								</div>
+							</div>					
+
+						{% else %}
+							<center><p>Henüz bir faturanız bulunmamaktadır</p></center>
+						{% endif %}
+					</div>
+
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			
+		   
+			{% endblock content %}

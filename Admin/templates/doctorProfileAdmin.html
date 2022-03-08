@@ -1,0 +1,142 @@
+
+
+			{% extends 'baseAdmin.html' %}
+
+		
+
+
+            {% block content %}
+                
+            
+           
+            
+                                
+                                <!-- Page Header -->
+                                <div class="page-header">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h3 class="page-title">Profil</h3>
+                                            <ul class="breadcrumb">
+                                                <li class="breadcrumb-item"><a href="index.html">Anasayfa</a></li>
+                                                <li class="breadcrumb-item active">Profil</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /Page Header -->
+                              
+                                
+                                                    
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="profile-header">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto profile-image">
+                                                    <a href="#">
+                                                        <img class="rounded-circle" alt="User Image" src="{{doctor.image.url}}">
+                                                    </a>
+                                                </div>
+                                                <div class="col ml-md-n2 profile-user-info">
+                                                    <h4 class="user-name mb-0">{{doctor.get_full_name}}</h4>
+                                                    <h6 class="text-muted">{{doctor.email}}</h6>
+                                                    <div class="user-Location"><i class="fa fa-map-marker"></i>
+                                                            
+                                                            {% if doctor.state == None or doctor.city == None or doctor.country == None %}
+                                                            Konum tam olarak belirtilmemiş
+                                                            {% else %}
+                                                                {{doctor.state}},{{doctor.city}},{{doctor.country}}
+                                                            {% endif %}
+                                                                
+                                                        </div>
+                                                    <div class="about-text">{{doctor.about}}</div>
+                                                </div>
+                                                <!-- <div class="col-auto profile-btn">
+                                                    
+                                                    <a data-toggle="modal" href="#edit_personal_details" class="btn btn-primary">
+                                                        Düzenle	
+                                                    </a>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="profile-menu">
+                                            <ul class="nav nav-tabs nav-tabs-solid">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" data-toggle="tab" href="#per_details_tab">Hakkımda</a>
+                                                </li>
+                                               
+                                            </ul>
+                                        </div>	
+                                        <div class="tab-content profile-tab-cont">
+                                            
+                                            <!-- Personal Details Tab -->
+                                            <div class="tab-pane fade show active" id="per_details_tab">
+                                            
+                                                <!-- Personal Details -->
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title d-flex justify-content-between">
+                                                                    <span>Kişisel Bilgiler</span> 
+                                                                    <!-- <a class="edit-link" data-toggle="modal" href="#edit_personal_details"><i class="fa fa-edit mr-1"></i>Düzenle</a> -->
+                                                                </h5>
+                                                                <div class="row">
+                                                                    <p class="col-sm-2 text-muted text-sm-right mb-0 mb-sm-3">Ad Soyad</p>
+                                                                    <p class="col-sm-10">{{doctor.get_full_name}}</p>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <p class="col-sm-2 text-muted text-sm-right mb-0 mb-sm-3">Doğum Tarihi</p>
+                                                                    <p class="col-sm-10">
+                                                                    {% if  doctor.date_of_birth %}
+                                                                        {{doctor.date_of_birth}}
+                                                                    {% endif %}
+                                                                        </p>
+                                                                </div>
+                                                                <div class="row">
+                                                                
+                                                                    <p class="col-sm-2 text-muted text-sm-right mb-0 mb-sm-3">Email</p>
+                                                                    <p class="col-sm-10">{{doctor.email}}</p>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <p class="col-sm-2 text-muted text-sm-right mb-0 mb-sm-3">Telefon</p>
+                                                                    <p class="col-sm-10">{{doctor.phone_number}}</p>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <p class="col-sm-2 text-muted text-sm-right mb-0">Adres</p>
+                                                                    <p class="col-sm-10 mb-0">
+                                                                    {% if doctor.address %}
+                                                                        {{doctor.address}}
+                                                                    {% endif %}
+                                                                        <br>
+                                                                    {% if doctor.state %}
+                                                                        {{doctor.state}}
+                                                                    {% endif %},<br>
+                                                                    {% if doctor.city %}
+                                                                        {{doctor.city}}
+                                                                    {% endif %},<br>
+                                                                    {% if doctor.country %}
+                                                                        {{doctor.country}}
+                                                                    {% endif %}.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
+                                                    </div>
+            
+                                                
+                                                </div>
+                                                <!-- /Personal Details -->
+            
+                                            </div>
+                                            <!-- /Personal Details Tab -->
+                                         
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                    
+                    
+                  
+                
+                                {% endblock content %}

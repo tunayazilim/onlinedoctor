@@ -1,0 +1,24 @@
+amazona ilk mediadan no avatarı yükle çünkü kullanıı kayıt olurken ilk onu alıyor yoksa hata verir.
+
+
+
+1-yorum ekledikten sonra sayfa yenilenince yorumların aktif olmaması
+2-reply yorumlarda kalan karakter sayısı belirleme
+facebook login http 'e izin vermez sadece https kabul eder eğer hata çıkarsa django paket kurarak localde https çalıştırabilirsin
+yayına aldıktan sonra facebook ve login girişşleri için domain kısımlarını düzenle
+doktor profil sayfasında arama mesaj ve görüntülü arama kısmında linkler direkt randevu al kısmına yönlendiriliyor ilerde ödeme yapıldığında kontrol et o kısmı
+recatpcha için yayına alıktan sonra domain ekle
+bütün fonksiyonlara @required ekle login olmaları gereken yerler için
+footer her sayfa için özel js leri ayır
+iyzico domain de yanlış canlıya aldıktan sonra değiştir değişmezse yeni bir hesap aç ve api keylerini env de tut
+iyzico paymentde callback url değiştir
+timeschedule silirken ödenenlerde siliniyormu kontrol et
+doktor randevularım kısmında onaylananları 3 tane button değil de onaylandı şeklinde göster
+404 sayfası yapıldığında def success ve invoicesView fonksiyonunda else kısmını kontorl et 404 e yönlendir
+yayına aldıktan soonra asgideki http kontorl et chat ve video konferans kontrol et
+Sistemimiz diye yazıldı hakkımızda domain aldıktan sonra orayı kontrol et
+dil değişimi  ekle siteye
+dosya göndermede chat kısmında dosya boyutu 10mb olsun en fazla dosya uzantısı sadece .doc .xls yada .xlsx .pdf .jpg .png .jpeg
+mesajları json olarak kendi dosyalarımızda kaydedilsin
+hasta ifadesi geçen heryer danışan olarak değiştirilecek
+doktorlar takvimi baştan sona incelenecek tıklamadağın yer kalmasın

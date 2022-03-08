@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+
+
+{% block scriptsAdd %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+{% endblock scriptsAdd %}
+	
+
+
+{% load static %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+	<div class="container-fluid">
+		<div class="row align-items-center">
+			<div class="col-md-12 col-12">
+				<nav aria-label="breadcrumb" class="page-breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="index-2.html">Anasayfa</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Kullanıcı Sayfası</li>
+					</ol>
+				</nav>
+				<h2 class="breadcrumb-title">Kullanıcı Sayfası</h2>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Breadcrumb -->
+
+<!-- Page Content -->
+<div class="content">
+	<div class="container-fluid">
+
+		<div class="row">
+			<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+
+				{% include 'doctor-profile-sidebar.html' %}
+
+			</div>
+
+			<div class="col-md-7 col-lg-8 col-xl-9">
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card dash-card">
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-12 col-lg-4">
+										<div class="dash-widget dct-border-rht">
+											<div class="circle-bar circle-bar1">
+												<div class="circle-graph1" data-percent="75">
+													<img src="{% static 'assets/img/icon-01.png' %}" class="img-fluid"
+														alt="patient">
+												</div>
+											</div>
+											<div class="dash-widget-info">
+												<h6>Toplam Danışan Sayım</h6>
+												<h3>{{totalPatientCount}}</h3>
+												<p class="text-muted">Bugüne kadar</p>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-md-12 col-lg-4">
+										<div class="dash-widget dct-border-rht">
+											<div class="circle-bar circle-bar2">
+												<div class="circle-graph2" data-percent="65">
+													<img src="{% static 'assets/img/icon-02.png' %}" class="img-fluid"
+														alt="Patient">
+												</div>
+											</div>
+											<div class="dash-widget-info">
+												<h6>Bugünkü Danışan Sayım</h6>
+												<h3>{{schedulesTodayCount}}</h3>
+												<p class="text-muted">{{dateToday}}</p>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-md-12 col-lg-4">
+										<div class="dash-widget">
+											<div class="circle-bar circle-bar3">
+												<div class="circle-graph3" data-percent="50">
+													<img src="{% static 'assets/img/icon-03.png' %}" class="img-fluid"
+														alt="Patient">
+												</div>
+											</div>
+											<div class="dash-widget-info">
+												<h6>Onaylanmış Randevu Sayım</h6>
+												<h3>{{appointmentCount}}</h3>
+												<p class="text-muted">{{dateToday}}</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="row">
+					<div class="col-md-12 col-lg-6">
+					
+						<canvas id="myChart" ></canvas><br>
+						<center><p>Toplam Hizmet Kazancınız: {{data.0}} ₺ </p></center>
+						<center><p>Toplam Komisyon Kesintisi: {{data.1}} ₺</p></center>
+						<center><p>Diğer: {{data.2}} ₺</p></center>
+						
+					</div>
+					<div class="col-md-12 col-lg-6">
+					
+						<canvas id="myChartLastMonth" ></canvas><br>
+						<center><p> Bu Ayki Hizmet Kazancınız: {{lastMonthData.0}} ₺ </p></center>
+						<center><p>Bu Ayki Komisyon Kesintisi: {{lastMonthData.1}} ₺ </p></center>
+						<center><p>Diğer: {{lastMonthData.2}} ₺</p></center>
+					</div>	
+				</div>
+
+
+
+
+				<!-- <canvas id="myChart" width="500" height="100" ></canvas><br>
+				<center><p>Toplam Hizmet Kazancınız: {{data.0}} ₺ &emsp;Toplam Komisyon Kesintisi: {{data.1}} ₺ &emsp;Diğer: {{data.2}} ₺</p></center><br><br>
+				<canvas id="myChartLastMonth" width="500" height="100" ></canvas><br>
+				<center><p> Bu Ayki Hizmet Kazancınız: {{lastMonthData.0}} ₺ &emsp;Bu Ayki Komisyon Kesintisi: {{lastMonthData.1}} ₺ &emsp;Diğer: {{lastMonthData.2}} ₺</p></center><br><br>
+
+				 <br> <br> -->
+
+				
+					<br><br>
+				<div class="row">
+					<div class="col-md-12">
+						<h4 class="mb-4">Danışan Randevuları</h4>
+						<div class="appointment-tab">
+
+							<!-- Appointment Tab -->
+							<ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded">
+								<li class="nav-item">
+									<a class="nav-link active" href="#upcoming-appointments" data-toggle="tab">Gelen
+										Randevu İstekleri</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#today-appointments" data-toggle="tab">Bugünkü</a>
+								</li>
+							</ul>
+							<!-- /Appointment Tab -->
+
+							<div class="tab-content">
+
+								<!-- Upcoming Appointment Tab -->
+								<div class="tab-pane show active" id="upcoming-appointments">
+									<div class="card card-table mb-0">
+										<div class="card-body">
+											<div class="table-responsive">
+												<table class="table table-hover table-center mb-0">
+													<thead>
+														<tr>
+															<th>Danışan Adı</th>
+															<th>Randevu Tarihi</th>
+
+															<th>Tip</th>
+															<th class="text-center">Ödenen Miktar</th>
+															<th></th>
+														</tr>
+													</thead>
+													<tbody>
+
+
+
+
+
+														{% if schedules %}
+														{% for schedule in schedules %}
+														<tr>
+															<td>
+																<h2 class="table-avatar">
+																	<a href="" class="avatar avatar-sm mr-2"><img
+																			class="avatar-img rounded-circle"
+																			src="{{schedule.patient.image.url}}"
+																			alt="User Image"></a>
+																	<a
+																		href="">{{schedule.patient.get_full_name}}<span>#{{schedule.pk}}</span></a>
+																</h2>
+															</td>
+															<td>{{schedule.date}} <span
+																	class="d-block text-info">{{schedule.starting_time}}-{{schedule.finishing_time}}</span>
+															</td>
+
+															<td>Danışan</td>
+															<td class="text-center">{{schedule.money}}₺</td>
+															<td class="text-right">
+																<div class="table-action">
+																	<!-- <a href="javascript:void(0);" class="btn btn-sm bg-info-light">
+																							<i class="far fa-eye"></i> Görüntüle
+																						</a> -->
+
+																	{% if schedule.status == "pending" %}
+																	<a href="{% url 'acceptAppointment' schedule.pk %}" class="btn btn-sm bg-success-light">
+																		<i class="fas fa-check"></i> Kabul Et
+																	</a>
+																	<a href="{% url 'deleteAppointment' schedule.pk %}" class="btn btn-sm bg-danger-light">
+																		<i class="fas fa-times"></i> İptal Et
+																	</a>
+																	{% elif schedule.status == "confirm" %}
+																		<a class="btn btn-sm bg-success-light">
+																			<i class="fas fa-check"></i> Onaylandı
+																		</a>
+																	{% else %}
+																	<a class="btn btn-sm bg-danger-light">
+																		<i class="fas fa-check"></i> Reddedildi
+																	</a>
+																	{% endif %}
+
+
+																</div>
+															</td>
+														</tr>
+														{% endfor %}
+														{% endif %}
+
+
+
+
+
+
+
+
+
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /Upcoming Appointment Tab -->
+
+								<!-- Today Appointment Tab -->
+								<div class="tab-pane" id="today-appointments">
+									<div class="card card-table mb-0">
+										<div class="card-body">
+											<div class="table-responsive">
+												<table class="table table-hover table-center mb-0">
+													<thead>
+														<tr>
+															<th>Danışan Adı</th>
+															<th>Randevu Tarihi</th>
+
+															<th>Tip</th>
+															<th class="text-center">Ödenen Miktar</th>
+															<th></th>
+														</tr>
+													</thead>
+													<tbody>
+
+
+
+
+
+														{% if schedulesToday %}
+														{% for schedule in schedulesToday %}
+														<tr>
+															<td>
+																<h2 class="table-avatar">
+																	<a href="" class="avatar avatar-sm mr-2"><img
+																			class="avatar-img rounded-circle"
+																			src="{{schedule.patient.image.url}}"
+																			alt="User Image"></a>
+																	<a
+																		href="">{{schedule.patient.get_full_name}}<span>#{{schedule.pk}}</span></a>
+																</h2>
+															</td>
+															<td>{{schedule.date}} <span
+																	class="d-block text-info">{{schedule.starting_time}}-{{schedule.finishing_time}}</span>
+															</td>
+
+															<td>New Patient</td>
+															<td class="text-center">{{schedule.money}}₺</td>
+															<td class="text-right">
+																<div class="table-action">
+
+																	{% if schedule.status == "pending" %}
+																	<a href="{% url 'acceptAppointment' schedule.pk %}" class="btn btn-sm bg-success-light">
+																		<i class="fas fa-check"></i> Kabul Et
+																	</a>
+																	<a href="{% url 'deleteAppointment' schedule.pk %}" class="btn btn-sm bg-danger-light">
+																		<i class="fas fa-times"></i> İptal Et
+																	</a>
+																	{% elif schedule.status == "confirm" %}
+																		<a class="btn btn-sm bg-success-light">
+																			<i class="fas fa-check"></i> Onaylandı
+																		</a>
+																	{% else %}
+																	<a class="btn btn-sm bg-danger-light">
+																		<i class="fas fa-check"></i> Reddedildi
+																	</a>
+																	{% endif %}
+																</div>
+															</td>
+														</tr>
+														{% endfor %}
+														{% endif %}
+
+
+
+
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /Today Appointment Tab -->
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<!-- /Page Content -->
+
+{{ labels|json_script:"labelss" }}
+{{ data|json_script:"defaulData" }}
+{{ lastMonthData|json_script:"lastMonthData" }}
+
+<script>
+
+	var labelsa = JSON.parse(document.getElementById('labelss').textContent);
+	var defaulDataa = JSON.parse(document.getElementById('defaulData').textContent);
+	var lastMonthDataa = JSON.parse(document.getElementById('lastMonthData').textContent);
+	var labels=[];
+	var defaultData=[];
+	var lastMonthData=[];
+	for (let index = 0; index < labelsa.length; index++) {
+		const element = labelsa[index];
+		labels.push(element);
+		defaultData.push(defaulDataa[index]);
+		lastMonthData.push(lastMonthDataa[index]);
+	}
+
+
+
+
+	
+
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: '# of Votes',
+            data: defaultData,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+
+
+
+
+const ctxa = document.getElementById('myChartLastMonth').getContext('2d');
+const myCharta = new Chart(ctxa, {
+    type: 'doughnut',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: '# of Votes',
+            data: lastMonthData,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+
+</script>
+
+
+
+
+
+{% endblock content %}
+

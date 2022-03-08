@@ -1,0 +1,916 @@
+{% extends 'base.html' %}
+
+
+{% load commentExist %}
+
+
+{% block content %}
+
+
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+	<div class="container-fluid">
+		<div class="row align-items-center">
+			<div class="col-md-12 col-12">
+				<nav aria-label="breadcrumb" class="page-breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="index-2.html">Anasayfa</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Doktor Profili</li>
+					</ol>
+				</nav>
+				<h2 class="breadcrumb-title">Doktor Profili</h2>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Breadcrumb -->
+<br>
+{% if messages %}
+<ul class="messages">
+	{% for message in messages %}
+
+	{% if 'success' in message.tags and "favouriteadding" in message.extra_tags %}
+	<div class="alert alert-success" role="alert">
+
+		<center><strong>{{message}}</strong></center>
+	</div>
+
+	{% endif %}
+
+	{% endfor %}
+</ul>
+{% endif %}
+
+<!-- Page Content -->
+<div class="content">
+	<div class="container">
+
+		<!-- Doctor Widget -->
+		<div class="card">
+			<div class="card-body">
+				<div class="doctor-widget">
+					<div class="doc-info-left">
+						<div class="doctor-img">
+							<img src="{{doctor.image.url}}" class="img-fluid" alt="User Image">
+							<br><br><br>
+							
+							 {% if doctor.hasSocialMedia %}
+					
+								<a href="{{doctor.get_social_medias_for_doctors.facebook}}" target="_blank"><i class="fab fa-facebook-f"></i> </a>&emsp;
+								<a href="{{doctor.get_social_medias_for_doctors.twitter}}" target="_blank"><i class="fab fa-twitter"></i> </a>&emsp;
+								<a href="{{doctor.get_social_medias_for_doctors.linkedin}}" target="_blank"><i class="fab fa-linkedin-in"></i></a>&emsp;
+								<a href="{{doctor.get_social_medias_for_doctors.instagram}}" target="_blank"><i class="fab fa-instagram"></i></a> 
+							{% else %}
+								<a href="" target="_blank"><i class="fab fa-facebook-f"></i> </a>&emsp;
+								<a href="" target="_blank"><i class="fab fa-twitter"></i> </a>&emsp;
+								<a href="" target="_blank"><i class="fab fa-linkedin-in"></i></a>&emsp;
+								<a href="" target="_blank"><i class="fab fa-instagram"></i></a>
+							{% endif %}
+							
+
+						</div>
+						<div class="doc-info-cont">
+							<h4 class="doc-name">{{doctor.unvan}} {{doctor.get_full_name}}</h4>
+							<p class="doc-speciality">{{doctor.define_profession}}</p>
+							<p class="doc-department">{{doctor.specializations|truncatechars:130}}</p>
+
+							<p style="font-size: 12px;">(Uzmanlık alanlarının tamamı genel bakış kısmında
+								sıralanmaktadır)</p>
+							<div class="rating">
+
+								{% if average_star != 0 %}
+								{% for i in average_star|rjust:average_star %}
+								<i class="fas fa-star filled"></i>
+								{% endfor %}
+								{% endif %}
+								{% if none_average_star != 0 %}
+								{% for i in none_average_star|rjust:none_average_star %}
+								<i class="fas fa-star"></i>
+								{% endfor %}
+								{% endif %}
+								<span class="d-inline-block average-rating">({{comments_count}})</span>
+							</div>
+							<div class="clinic-details">
+								<p class="doc-location"><i class="fas fa-map-marker-alt"></i>
+									{% if doctor.city or doctor.country %}
+									{{doctor.city}}, {{doctor.country}}
+									{% else %}
+									Konum Belirtilmemiş
+									{% endif %}
+								</p>
+								<ul class="clinic-gallery">
+
+
+									<!-- {% if clinic_images %}
+													{% for image in clinic_images %}
+														<li>
+															<a href="{{image.clinic_image.url}}" data-fancybox="gallery">
+																<img src="{{image.clinic_image.url}}" alt="Feature">
+															</a>
+														</li>
+													{% endfor %}
+												{% endif %} -->
+
+									{% for image in doctor.get_clinic_images %}
+									<li>
+										<a href="{{image.clinic_image.url}}" data-fancybox="gallery">
+											<img src="{{image.clinic_image.url}}" alt="Feature">
+										</a>
+									</li>
+									{% endfor %}
+
+
+
+
+
+								</ul>
+							</div>
+
+							<!-- Bu kısım hizmler kısmı içindi daha sonradan kaldırıldı -->
+							<!-- <div class="clinic-services">
+											{% if doctor.get_services|length > 0 %}
+												{% for item in doctor.get_services %}
+													<span>{{item}}</span>
+												{% endfor %}
+											{% else %}
+											<p style="color: red;">Ekli bir hizmet bulunamamıştır</p>
+											{% endif %}
+										</div> -->
+
+
+
+						</div>
+					</div>
+					<div class="doc-info-right">
+						<div class="clini-infos">
+							<ul>
+								<li><i class="far fa-thumbs-up"></i> {{doctor.get_rating_satisfy}}%</li>
+								<li><i class="far fa-comment"></i> {{doctor.get_all_comments_count}} Yorum</li>
+								<li><i class="fas fa-map-marker-alt"></i> {% if doctor.city or doctor.country %}
+									{{doctor.city}}, {{doctor.country}}
+									{% else %}
+									Konum Belirtilmemiş
+									{% endif %}</li>
+								<li><i class="far fa-money-bill-alt"></i> {% if doctor.is_free %}
+									Ücretsiz
+									{% else %}
+									{{doctor.custom_price }} ₺ ({{doctor.appointment_minute }} dakika)
+									{% endif %} </li>
+							</ul>
+						</div>
+
+						{% if not request.user.is_doctor %}
+						<div class="doctor-action">
+							<a {% if is_favourite %} style="background-color: green;" {% endif %} href="
+												 {% if request.user.is_authenticated %}
+													 {% url 'addDoctorToFavorites' doctor.slug %}
+													{% else %}
+													{% url 'login' %}
+												 {% endif %}
+													 " class="btn btn-white fav-btn">
+								<i class="far fa-bookmark"></i>
+							</a>
+							<a href="{% url 'booking' doctor.slug %}" class="btn btn-white msg-btn">
+								<i class="far fa-comment-alt"></i>
+							</a>
+							<a href="{% url 'booking' doctor.slug %}" class="btn btn-white call-btn" data-toggle="modal"
+								data-target="#voice_call">
+								<i class="fas fa-phone"></i>
+							</a>
+							<a href="{% url 'booking' doctor.slug %}" class="btn btn-white call-btn" data-toggle="modal"
+								data-target="#video_call">
+								<i class="fas fa-video"></i>
+							</a>
+						</div>
+						<div class="clinic-booking">
+							<a class="apt-btn" href="{% url 'booking' doctor.slug %}">Randevu Al</a>
+						</div>
+						{% endif %}
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Doctor Widget -->
+
+		<!-- Doctor Details Tab -->
+		<div class="card">
+			<div class="card-body pt-0">
+
+				<!-- Tab Menu -->
+				<nav class="user-tabs mb-4">
+					<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+						<li class="nav-item">
+							<a class="nav-link 
+										
+											" href="#doc_overview" data-toggle="tab">Genel Bakış</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#doc_locations" data-toggle="tab">Konumlar</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" href="#doc_reviews" data-toggle="tab">Yorumlar</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#doc_business_hours" data-toggle="tab">Çalışma Saatleri</a>
+						</li>
+					</ul>
+				</nav>
+				<!-- /Tab Menu -->
+
+				<!-- Tab Content -->
+				<div class="tab-content pt-0">
+
+					<!-- Overview Content -->
+					<div role="tabpanel" id="doc_overview" class="tab-pane fade ">
+						<div class="row">
+							<div class="col-md-12 col-lg-9">
+
+								<!-- About Details -->
+								<div class="widget about-widget">
+									<h4 class="widget-title">Hakkımda</h4>
+									<p>{{doctor.about}}</p>
+								</div>
+								<!-- /About Details -->
+
+								<!-- Education Details -->
+								<div class="widget education-widget">
+									<h4 class="widget-title">Eğitimler</h4>
+									<div class="experience-box">
+										<ul class="experience-list">
+
+
+											{% if educations %}
+											{% for edu in educations %}
+											<li>
+												<div class="experience-user">
+													<div class="before-circle"></div>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<a href="#/" class="name">{{edu.college}}</a>
+														<div>{{edu.degree}}</div>
+														<span class="time">{{edu.year_of_completion}}</span>
+													</div>
+												</div>
+											</li>
+											{% endfor %}
+											{% else %}
+											<p style="color: red;">&nbsp;&nbsp;&nbsp; Eğitim bilgisi bulunmamaktadır</p>
+											{% endif %}
+
+
+
+										</ul>
+									</div>
+								</div>
+								<!-- /Education Details -->
+
+								<!-- Experience Details -->
+								<div class="widget experience-widget">
+									<h4 class="widget-title">Deneyimler</h4>
+									<div class="experience-box">
+										<ul class="experience-list">
+
+											{% if experiences %}
+											{% for exp in experiences %}
+											<li>
+												<div class="experience-user">
+													<div class="before-circle"></div>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<a href="#/" class="name">{{exp.hospital_name}}</a>
+														<span class="time">{{exp.time}}</span>
+													</div>
+												</div>
+											</li>
+											{% endfor %}
+											{% else %}
+											<p style="color: red;">&nbsp;&nbsp;&nbsp; Deneyim bulunmamaktadır</p>
+											{% endif %}
+
+
+
+
+										</ul>
+									</div>
+								</div>
+								<!-- /Experience Details -->
+
+								<!-- Awards Details -->
+								<div class="widget awards-widget">
+									<h4 class="widget-title">Ödüller</h4>
+									<div class="experience-box">
+										<ul class="experience-list">
+
+
+
+											{% if awards %}
+											{% for award in awards %}
+											<li>
+												<div class="experience-user">
+													<div class="before-circle"></div>
+												</div>
+												<div class="experience-content">
+													<div class="timeline-content">
+														<p class="exp-year">{{award.year}}</p>
+														<h4 class="exp-title">{{award.award_name}}</h4>
+														<!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin a ipsum tellus. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p> -->
+													</div>
+												</div>
+											</li>
+											{% endfor %}
+											{% else %}
+											<p style="color: red;">&nbsp;&nbsp;&nbsp; Ödül bulunmamaktadır</p>
+											{% endif %}
+
+
+
+
+
+										</ul>
+									</div>
+								</div>
+								<!-- /Awards Details -->
+
+								<!-- Services List -->
+								<div class="service-list">
+									<h4>Hizmetler</h4>
+									<ul class="clearfix">
+
+										{% if services %}
+										{% if services|length > 1 %}
+										{% for item in services %}
+										<li>{{service}} </li>
+										{% endfor %}
+										{% else %}
+										<p style="color: red;">&nbsp;&nbsp;&nbsp; Ekli bir hizmet alanı bulunmamaktadır
+										</p>
+										{% endif %}
+
+										{% endif %}
+
+
+
+
+									</ul>
+								</div>
+								<!-- /Services List -->
+
+								<!-- Specializations List -->
+								<div class="service-list">
+									<h4>Uzmanlık Alanları</h4>
+									<ul class="clearfix">
+										{% if specializations %}
+										{% if specializations|length > 1 %}
+										{% for spe in specializations %}
+										<li>{{spe}} </li>
+										{% endfor %}
+										{% else %}
+										<p style="color: red;">&nbsp;&nbsp;&nbsp; Ekli bir uzmanlık alanı
+											bulunmamaktadır</p>
+										{% endif %}
+										{% endif %}
+
+									</ul>
+								</div>
+								<!-- /Specializations List -->
+
+							</div>
+						</div>
+					</div>
+					<!-- /Overview Content -->
+
+					<!-- Locations Content -->
+					<div role="tabpanel" id="doc_locations" class="tab-pane fade">
+
+						<!-- Location List -->
+						<div class="location-list">
+							<div class="row">
+
+								<!-- Clinic Content -->
+								<div class="col-md-6">
+									<div class="clinic-content">
+										<h4 class="clinic-name"><a href="#">{{doctor.clinic_name}}</a></h4>
+										<p class="doc-speciality">{{doctor.define_profession}}</p>
+										<!-- <div class="rating">
+														<i class="fas fa-star filled"></i>
+														<i class="fas fa-star filled"></i>
+														<i class="fas fa-star filled"></i>
+														<i class="fas fa-star filled"></i>
+														<i class="fas fa-star"></i>
+														<span class="d-inline-block average-rating">(4)</span>
+													</div> -->
+										<div class="clinic-details mb-0">
+											<h5 class="clinic-direction"> <i class="fas fa-map-marker-alt"></i>
+												{% if doctor.clinic_address != "" %}
+												{{doctor.clinic_address}}
+												{% else %}
+												Henüz bir klinik konumu belirtilmemiş
+												{% endif %}
+												<br>
+											</h5>
+											<ul>
+												{% for image in doctor.get_clinic_images %}
+												<li>
+													<a href="{{image.clinic_image.url}}" data-fancybox="gallery2">
+														<img src="{{image.clinic_image.url}}" alt="Feature Image">
+													</a>
+												</li>
+												{% endfor %}
+											</ul>
+										</div>
+									</div>
+								</div>
+								<!-- /Clinic Content -->
+
+								<!-- Clinic Timing -->
+								<!-- <div class="col-md-4">
+												<div class="clinic-timing">
+													<div>
+														<p class="timings-days">
+															<span> Mon - Sat </span>
+														</p>
+														<p class="timings-times">
+															<span>10:00 AM - 2:00 PM</span>
+															<span>4:00 PM - 9:00 PM</span>
+														</p>
+													</div>
+													<div>
+													<p class="timings-days">
+														<span>Sun</span>
+													</p>
+													<p class="timings-times">
+														<span>10:00 AM - 2:00 PM</span>
+													</p>
+													</div>
+												</div>
+											</div> -->
+								<!-- /Clinic Timing -->
+
+								<!-- <div class="col-md-2">
+												<div class="consult-price">
+													$250
+												</div>
+											</div> -->
+							</div>
+						</div>
+						<!-- /Location List -->
+
+
+
+					</div>
+					<!-- /Locations Content -->
+
+
+
+
+
+
+					<!-- Reviews Content -->
+					<div role="tabpanel" id="doc_reviews" class="tab-pane fade show active
+										
+								">
+
+						<!-- Review Listing -->
+						<div class="widget review-listing">
+							{% if messages %}
+							<ul class="messages">
+								{% for message in messages %}
+
+								{% if 'error' in message.tags and "addingcomment" in message.extra_tags %}
+								<div class="alert alert-danger" role="alert">
+
+									<center><strong>{{message}}</strong></center>
+								</div>
+								{% elif 'success' in message.tags and "addingcomment" in message.extra_tags %}
+								<div class="alert alert-success" role="alert">
+
+									<center><strong>{{message}}</strong></center>
+								</div>
+								{% endif %}
+
+
+
+								{% endfor %}
+							</ul>
+							{% endif %}
+							<ul class="comments-list" id="loadmorecomment">
+
+
+
+								{% if comments %}
+								{% for comment in comments %}
+
+								{% if comment.is_parent %}
+								<li class="infinite-item">
+									<div class="comment">
+										<img class="avatar avatar-sm rounded-circle" alt="User Image"
+											src="{{comment.comment_user.image.url}}">
+										<div class="comment-body">
+											<div class="meta-data">
+
+
+												<span 
+													class="comment-author">{{comment.comment_user.unvan}}
+													{{comment.comment_user.get_full_name}}</span>
+
+												<span class="comment-date">Önce Paylaşıldı: {{comment.updated_date|timesince }}</span>
+													
+
+												<div class="review-count rating">
+
+
+													{% if comment.star != 0 %}
+													{% for i in comment.star|rjust:comment.star %}
+													<i class="fas fa-star filled"></i>
+													{% endfor %}
+													{% endif %}
+													{% if comment.none_star != 0 %}
+													{% for i in comment.none_star|rjust:comment.none_star %}
+													<i class="fas fa-star"></i>
+													{% endfor %}
+													{% endif %}
+
+												</div>
+											</div>
+											<p style="color: black; font-weight: bold;" class="comment-content">
+											<pre style="color: black; font-weight: bold;"
+												class="comment-content">{{comment.comment}}</pre>
+											</p>
+											<div class="comment-reply">
+												<a onclick="toggleText('{{ comment.pk }}')" class="comment-btn"
+													href="#">
+													<i class="fas fa-reply"></i> Yanıtla
+												</a>
+												<form name="hideform" id={{ comment.pk }} style="display: none"
+													action="{% url 'addReplyComment' doctor.slug comment.pk %}"
+													method="post">
+													{% csrf_token %}
+													<div class="form-group">
+														<label>Yorumunuz</label>
+														<textarea required maxlength="400" rows="6" cols="50"
+															name="comment" class="form-control"></textarea>
+
+														<div class="d-flex justify-content-between mt-3"></div>
+													</div>
+													<hr>
+
+													<div class="submit-section">
+														<button type="submit" class="btn btn-primary submit-btn">Yorumu
+															Kaydet</button>
+													</div>
+												</form>
+
+											</div>
+
+										</div>
+									</div>
+
+									{% if comment.children %}
+
+
+									<!-- Comment Reply -->
+									<ul class="comments-reply">
+										{% for com in comment.children %}
+										<li>
+											<div class="comment">
+												<img class="avatar avatar-sm rounded-circle" alt="User Image"
+													src="{{com.comment_user.image.url}}">
+												<div class="comment-body">
+													<div class="meta-data">
+														<span class="comment-author">{{com.comment_user.unvan}}
+															{{com.comment_user.get_full_name}}</span>
+														<span class="comment-date">Önce Paylaşıldı: {{ com.updated_date|timesince }}</span>
+															
+
+													</div>
+													<p style="color: black; font-weight: bold;" class="comment-content">
+														{{com.comment}}
+													</p>
+													<div class="comment-reply">
+
+
+													</div>
+												</div>
+											</div>
+										</li>
+										{% endfor %}
+									</ul>
+									<!-- /Comment Reply -->
+
+
+									{% endif %}
+								</li>
+
+
+
+
+
+								{% endif %}
+
+
+								{% endfor %}
+								{% else %}
+								<p style="color: orange;">Henüz bu doktorumuza ait yorum bulunmamaktadır.</p>
+								{% endif %}
+
+
+
+							</ul>
+
+							<!-- Show All  daha fazla yorum yazan yerin yanından aldım <strong>({{comments_count}})</strong>-->
+							{% if comments.has_next %}
+							<div class="all-feedback text-center">
+
+								<a id="#loadMore" name="more_comments"
+									href="?page={{ comments.next_page_number }}&active=yes"
+									class="btn btn-primary btn-sm">
+									Diğer yorumları görüntüle
+								</a>
+
+							</div>
+							{% endif %}
+							<!-- /Show All -->
+
+							<div class="loading" style="display: none;">
+								Loading...
+							</div>
+
+							<script>
+								var infinite = new Waypoint.Infinite({
+									element: $('.comments-list')[0],
+									onBeforePageLoad: function () {
+										$('.loading').show();
+									},
+									onAfterPageLoad: function ($items) {
+										$('.loading').hide();
+									}
+								});
+							</script>
+
+
+
+
+
+
+
+
+
+
+						</div>
+						<!-- /Review Listing -->
+
+						<!-- Write Review -->
+						<div class="write-review">
+							<h4><strong>{{doctor.unvan}} {{doctor.get_full_name}}</strong> için yorum yaz</h4><br><br>
+
+
+							<!-- Write Review Form -->
+
+
+
+
+
+
+
+							{% if request.user.is_authenticated %}
+							{% isCommentExist request doctor as existComment %}
+							{% if request.user != doctor %}
+
+							{% if existComment == False %}
+							<form action="{% url 'showDoctorProfile' doctor.slug %}?active=yes" method="POST">
+								{% csrf_token %}
+
+								<div class="form-group">
+									<label>Kaç yıldız veriyorsunuz?</label>
+									<div class="star-rating">
+										<input id="star-5" type="radio" name="star" value="5">
+										<label for="star-5" title="5 stars">
+											<i class="active fa fa-star"></i>
+										</label>
+										<input id="star-4" type="radio" name="star" value="4">
+										<label for="star-4" title="4 stars">
+											<i class="active fa fa-star"></i>
+										</label>
+										<input id="star-3" type="radio" name="star" value="3">
+										<label for="star-3" title="3 stars">
+											<i class="active fa fa-star"></i>
+										</label>
+										<input id="star-2" type="radio" name="star" value="2">
+										<label for="star-2" title="2 stars">
+											<i class="active fa fa-star"></i>
+										</label>
+										<input id="star-1" type="radio" name="star" value="1">
+										<label for="star-1" title="1 star">
+											<i class="active fa fa-star"></i>
+										</label>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label>Yorumunuz</label>
+									<textarea id="review_desc" required maxlength="400" rows="6" cols="50"
+										name="comment" class="form-control"></textarea>
+
+									<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span
+												id="chars">400</span> karakter kaldı</small></div>
+								</div>
+								<hr>
+
+								<div class="submit-section">
+									<button type="submit" class="btn btn-primary submit-btn">Yorumu Kaydet</button>
+								</div>
+							</form>
+							{% else %}
+							<p>Daha önce yorum yaptınız</p>
+							{% endif %}
+
+
+
+							{% else %}
+							<p style="color: red;">Kendinize yorum yapamazsınız</p>
+							{% endif %}
+							{% else %}
+							<p>Yorum yapmak için giriş yapmanız gerekmektedir.</p>
+							{% endif %}
+
+
+
+
+							<!-- /Write Review Form -->
+
+						</div>
+						<!-- /Write Review -->
+
+					</div>
+					<!-- /Reviews Content -->
+
+
+
+
+
+
+
+
+
+					<!-- Business Hours Content -->
+					<div role="tabpanel" id="doc_business_hours" class="tab-pane fade">
+						<div class="row">
+							<div class="col-md-6 offset-md-3">
+
+								<!-- Business Hours Widget -->
+								<div class="widget business-widget">
+									<div class="widget-content">
+										<div class="listing-hours" id="listingTime">
+											<div class="listing-day current" id="currentDay">
+												<!-- <div class="day">Today <span>5 Nov 2019</span></div>
+															<div class="time-items">
+																<span class="open-status"><span class="badge bg-success-light">Open Now</span></span>
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div> -->
+											</div>
+
+
+
+
+											<!-- <div class="listing-day">
+															<div class="day">Monday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Tuesday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Wednesday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Thursday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Friday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Saturday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day closed">
+															<div class="day">Sunday</div>
+															<div class="time-items">
+																<span class="time"><span class="badge bg-danger-light">Closed</span></span>
+															</div>
+														</div> -->
+
+
+
+										</div>
+									</div>
+								</div>
+								<!-- /Business Hours Widget -->
+
+							</div>
+						</div>
+					</div>
+					<!-- /Business Hours Content -->
+
+				</div>
+			</div>
+		</div>
+		<!-- /Doctor Details Tab -->
+
+	</div>
+</div>
+<!-- /Page Content -->
+
+
+
+
+
+<script>
+
+	window.onload = function () {
+
+		$.ajax({
+
+
+			type: "POST",
+			url: "{% url 'getStartingandFinishingTime' doctor.pk %}",
+			dataType: 'JSON',
+			data: {
+				'csrfmiddlewaretoken': "{{  csrf_token  }}",
+
+
+			},
+			success: function (data) {
+
+
+				for (var i = 0; i < data.liste.length; i++) {
+					if (data.liste[i].day == data.day) {
+						if (data.liste[i].min_starting_time != "-") {
+							$("#currentDay").html("<div class='day'>Bugün <span>" + data.today + "</span></div>" +
+								'<div class="time-items">' +
+								'<span class="open-status"><span class="badge bg-success-light">Müsait</span></span>' +
+								"<span class='time'>" + data.liste[i].min_starting_time + "-" + data.liste[i].max_finishing_time + "</span>" +
+								"</div>");
+						} else {
+							$("#currentDay").html("<div class='day'>Bugün <span>" + data.today + "</span></div>" +
+								'<div class="time-items">' +
+								'<span class="open-status"><span class="badge bg-danger-light">Müsait Değil</span></span>' +
+
+								"</div>");
+						}
+
+
+					}
+
+					if (data.liste[i].min_starting_time != "-") {
+						$("#listingTime").append("<div class='listing-day'>" +
+							"<div class='da'>" + data.liste[i].day + " (" + data.dates[i] + ")" + "</div>" +
+							"<div class='time-items'>" +
+							"<span class='time'>" + data.liste[i].min_starting_time + "-" + data.liste[i].max_finishing_time + "</span>" +
+							"</div>" +
+							"</div>");
+					} else {
+						$("#listingTime").append("<div class='listing-day closed'>" +
+							"<div class='da'>" + data.liste[i].day + " (" + data.dates[i] + ")" + "</div>" +
+							"<div class='time-items'>" +
+							"<span class='time'><span class='badge bg-danger-light'>Müsait Değil</span></span>" +
+							"</div>" +
+							"</div>");
+					}
+
+
+
+				}
+			}
+
+		});
+
+	}
+
+
+
+</script>
+
+
+
+
+{% endblock content %}

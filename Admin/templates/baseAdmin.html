@@ -1,0 +1,234 @@
+{% load static %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<!-- Mirrored from dreamguys.co.in/demo/doccure/admin/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:20 GMT -->
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+        <title>Doccure - Dashboard</title>
+		
+		<!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'assetsAdmin/img/favicon.png' %}">
+		
+		<!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="{% static 'assetsAdmin/css/bootstrap.min.css' %}">
+		
+		<!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="{% static 'assetsAdmin/css/font-awesome.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}">
+
+        <!-- Datatables CSS -->
+		<link rel="stylesheet" href="{% static 'assetsAdmin/plugins/datatables/datatables.min.css' %}">
+		
+		<!-- Feathericon CSS -->
+        <link rel="stylesheet" href="{% static 'assetsAdmin/css/feathericon.min.css' %}">
+		
+		<link rel="stylesheet" href="{% static 'assetsAdmin/plugins/morris/morris.css' %}">
+		
+		<!-- Main CSS -->
+        <link rel="stylesheet" href="{% static 'assetsAdmin/css/style.css' %}">
+
+		
+		{% block scriptsAdminAdd %}
+			
+		{% endblock scriptsAdminAdd %}
+			
+		
+		<!--[if lt IE 9]>
+			<script src="assetsAdmin/js/html5shiv.min.js"></script>
+			<script src="assetsAdmin/js/respond.min.js"></script>
+		<![endif]-->
+    </head>
+    <body>
+	
+		<!-- Main Wrapper -->
+        <div class="main-wrapper">
+		
+			
+
+				{% include 'headerAdmin.html' %}
+
+
+                {% include 'sidebarAdmin.html' %}
+
+
+			
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+                <div class="content container-fluid">
+					
+					
+
+                    
+                    {% block content %}
+                        
+                    {% endblock content %}
+                        
+
+
+
+
+					
+				</div>			
+			</div>
+			<!-- /Page Wrapper -->
+
+
+
+
+			
+			{% if reviewsAdmin %}
+				<!-- Delete Modal -->
+			<div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+				<div class="modal-dialog modal-dialog-centered" role="document" >
+					<div class="modal-content">
+					<!--	<div class="modal-header">
+							<h5 class="modal-title">Delete</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>-->
+						<div class="modal-body">
+							<div class="form-content p-2">
+								<h4 class="modal-title">Sil</h4>
+								<p class="mb-4">Bu yorumu gerçekten silmek istiyor musunuz?</p>
+								<button onclick="deleteReview();" type="button" class="btn btn-primary">Sil </button>
+								<button type="button" class="btn btn-danger" data-dismiss="modal">Vazgeç</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Delete Modal -->
+			{% endif %}
+				
+
+			
+
+
+
+
+
+
+            
+            {% if specialitiesPage %}
+                	
+			<!-- Add Modal -->
+			<div class="modal fade" id="Add_Specialities_details" aria-hidden="true" role="dialog">
+				<div class="modal-dialog modal-dialog-centered" role="document" >
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Alan Ekle</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form method="post" action="{% url 'specialitiesAdmin' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+
+								<div class="row form-row">
+									<div class="col-12 col-sm-6">
+										<div class="form-group">
+											<label>Alan</label>
+											{{ form.name }}
+										</div>
+									</div>
+									<div class="col-12 col-sm-6">
+										<div class="form-group">
+											<label>Fotoğraf</label>
+											{{ form.image }}
+										</div>
+									</div>
+									
+								</div>
+								<button type="submit" class="btn btn-primary btn-block">Kaydet</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /ADD Modal -->
+			
+			<!-- Edit Details Modal -->
+			<div class="modal fade" id="edit_specialities_details" aria-hidden="true" role="dialog">
+				<div class="modal-dialog modal-dialog-centered" role="document" >
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Edit Specialities</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form method="post" action="" enctype="multipart/form-data">
+								<div class="row form-row">
+									<div class="col-12 col-sm-6">
+										<div class="form-group">
+											<label>Specialities</label>
+											<input id="specialId" type="text" class="form-control" value="Cardiology">
+										</div>
+									</div>
+									<div class="col-12 col-sm-6">
+										<div class="form-group">
+											<label>Image</label>
+											<input id="imageId" type="file"  class="form-control">
+										</div>
+									</div>
+									
+								</div>
+								<button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Edit Details Modal -->
+			
+			<!-- Delete Modal -->
+			<div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+				<div class="modal-dialog modal-dialog-centered" role="document" >
+					<div class="modal-content">
+					<!--	<div class="modal-header">
+							<h5 class="modal-title">Delete</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>-->
+						<div class="modal-body">
+							<div class="form-content p-2">
+								<h4 class="modal-title">Sil</h4>
+								<p class="mb-4">Gerçekten bu alanı silmek istediğinizden emin misiniz?</p>
+								<button type="button" onclick="deleteSpecial();" class="btn btn-primary">Sil </button>
+								<button type="button" class="btn btn-danger" data-dismiss="modal">İptal</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Delete Modal -->
+            {% endif %}
+                
+
+
+
+
+
+		
+        </div>
+		<!-- /Main Wrapper -->
+		
+		
+        {% include 'footerAdmin.html' %}
+
+
+		
+    </body>
+
+<!-- Mirrored from dreamguys.co.in/demo/doccure/admin/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:34 GMT -->
+</html>

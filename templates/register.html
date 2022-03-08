@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+
+{% block body_class %}account-page{% endblock body_class %}
+
+
+
+
+
+{% block content %}
+
+
+
+
+
+<!-- Page Content -->
+<div class="content">
+	<div class="container-fluid">
+
+		<div class="row">
+			<div class="col-md-8 offset-md-2">
+
+
+				{% if form.errors %}
+					{% for field in form %}
+						{% for error in field.errors %}
+							<div class="alert alert-danger">
+								<center><strong>{{ error|escape }}</strong></center>
+							</div>
+						{% endfor %}
+					{% endfor %}
+					{% for error in form.non_field_errors %}
+					<div class="alert alert-danger">
+						<center><strong>{{ error|escape }}</strong></center>
+					</div>
+					{% endfor %}
+				{% else %}
+
+					{% if messages %}
+					<ul class="messages">
+						{% for message in messages %}
+					
+						{% if message.tags == "error" %}
+						<div class="alert alert-danger" role="alert">
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% else %}
+						<div class="alert alert-success" role="alert">
+
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% endif %}
+
+
+
+						{% endfor %}
+					</ul>
+					{% endif %} 
+
+
+
+				{% endif %}
+
+
+
+
+
+				<!-- Register Content -->
+				<div class="account-content">
+					<div class="row align-items-center justify-content-center">
+						<div class="col-md-7 col-lg-6 login-left">
+							<img src="{% static 'assets/img/login-banner.png' %}" class="img-fluid"
+								alt="Doccure Register">
+						</div>
+						<div class="col-md-12 col-lg-6 login-right">
+							<div class="login-header">
+								<h3>
+								{% if type == 'Doktor' %}
+								{{type}} 
+								{% else %}
+								Danışan
+								{% endif %}
+									Kaydı<a href="{% if type == 'Doktor' %}
+										{% url 'register_patient' %}
+										{% elif type == 'Hasta' %}
+										{% url 'register_doctor' %}
+										{% endif %}">
+										{% if type == "Doktor" %}
+										Danışan Kaydı İçin Tıklayın
+										{% elif type == "Hasta" %}
+										Doktor Kaydı İçin Tıklayın
+										{% endif %}
+									</a></h3>
+							</div>
+
+
+
+							<!-- Register Form -->
+							<form enctype="multipart/form-data" action="
+										{% if type == 'Doktor' %}
+										{% url 'register_doctor' %}
+										{% elif type == 'Hasta' %}
+										{% url 'register_patient' %}
+										{% endif %}
+											" method="POST">
+								{% csrf_token %}
+
+
+								{% for field in form.visible_fields %}
+
+
+
+								{% if field.name != "phone_number" %}
+									{% if field.name != "file" %}
+										{% if field.name != "kimlik" %}
+											<div class="form-group form-focus">
+
+												<input required name="{{ field.name }}" class="form-control floating"
+													type="{{ field.field.widget.input_type }}"
+													value="{{ field.value|default_if_none:'' }}">
+
+												<label class="focus-label">{{ field.label_tag }}</label>
+
+											</div>
+										{% else %}
+										{% if type == "Doktor" %}
+											<div class="form-group">
+												<label class="focus-label">{{ field.label_tag }}</label>
+												{{ field }}
+											</div>
+										{% endif %}
+											
+									{% endif %}
+								{% else %}
+
+									{% if type == "Doktor" %}
+									<div class="form-group">
+										<label class="focus-label">{{ field.label_tag }}</label>
+										{{ field }}
+
+									</div>
+
+									{% endif %}
+
+
+								{% endif %}
+									{% if field.name == "password1" %}
+									<ul>
+										<li>Parolanız diğer kişisel bilgileriniz ile çok benzer olamaz.</li>
+										<li>Parolanız en az 8 karakter içermek zorundadır.</li>
+										<li>Parolanız yaygın olarak kullanılan bir parola olamaz.</li>
+										<li>Parolanız tamamıyla sayısal olamaz.</li>
+									</ul>
+								{% endif %}
+
+								{% elif field.name == "phone_number" %}
+									<div class="form-group">
+										{{ field }}
+									</div>
+									{% endif %}
+
+										
+
+								{% endfor %}
+								
+
+								<span><input type="checkbox" onclick="buttonDisability();" id="check1" name="check1" value="check1">
+  								<label for="check1"> <a style="color: green;" href="{% url 'kullanimKosullari' %}">Uygulama Kullanım Koşullarını</a> kabul ediyorum ve Sistemin <a style="color: green;"  href="{% url 'gizlilikPolitikasi' %}">Kişisel Veri Gizlilik Politikası ve Aydınlatma Metni</a> kapsamında bu site tarafından kişisel sağlık verilerimin; hekim/uzmandan randevu talebi oluşturmak, hekim/uzman ile sohbet başlatmak ve/veya hekim/uzmana mesaj göndermek ve sağlık verilerimin yine bu site tarafından saklanması amaçları ile sınırlı olarak işlenmesine ve yurtdışına aktarılmasına açık rıza veriyorum.</label>
+							</span><br><br>
+							<div class="g-recaptcha" data-sitekey="6LePTTseAAAAADgHb1qKLGNJ2TGqfeiEJkiINDo-"></div>	
+											<br><br><br>
+								<div class="text-right">
+									<a class="forgot-link" href="{% url 'login' %}">Zaten bir hesabınız var mı?</a>
+								</div>
+								<button disabled id="registerButton" class="btn btn-primary btn-block btn-lg login-btn" type="submit">Kayıt
+									Ol</button>
+								<div class="login-or">
+												<span class="or-line"></span>
+												<span class="span-or">or</span>
+											</div>
+											<div class="row form-row social-login">
+												<div class="col-6">
+													<a href="#" class="btn btn-facebook btn-block"><i class="fab fa-facebook-f mr-1"></i> Login</a>
+												</div>
+												<div class="col-6">
+													<a href="#" class="btn btn-google btn-block"><i class="fab fa-google mr-1"></i> Login</a>
+												</div>
+											</div>
+							</form>
+							<div class="alert alert-info" style="display: none;"></div>
+							<!-- /Register Form -->
+
+						</div>
+					</div>
+				</div>
+				<!-- /Register Content -->
+
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<!-- /Page Content -->
+
+<script>
+
+
+	function buttonDisability(){
+		var button=document.getElementById("registerButton");
+		if (button.disabled == true){
+			button.disabled=false;
+		}else{
+			button.disabled=true;
+		}
+	}
+
+
+
+
+	function getIp(callback) {
+		fetch('https://ipinfo.io/json?token=<74738d4adcd591>', { headers: { 'Accept': 'application/json' } })
+			.then((resp) => resp.json())
+			.catch(() => {
+				return {
+					country: 'tr',
+				};
+			})
+			.then((resp) => callback(resp.country));
+	}
+	console.log(getIp);
+	const phoneInputField = document.querySelector("#phone");
+	const phoneInput = window.intlTelInput(phoneInputField, {
+		initialCountry: "tr",
+		geoIpLookup: getIp,
+		utilsScript:
+			"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+	});
+
+	const info = document.querySelector(".alert-info");
+	function process(event) {
+		event.preventDefault();
+
+		const phoneNumber = phoneInput.getNumber()
+
+		info.style.display = "";
+		info.innerHTML = `Phone number in E.164 format: <strong>${phoneNumber}</strong>`;
+	}
+
+
+
+
+</script>
+
+
+
+
+{% endblock content %}

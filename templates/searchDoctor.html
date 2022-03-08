@@ -1,0 +1,345 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+
+
+
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+	<div class="container-fluid">
+		<div class="row align-items-center">
+			<div class="col-md-8 col-12">
+				<nav aria-label="breadcrumb" class="page-breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="index-2.html">Anasayfa</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Doktor Ara</li>
+					</ol>
+				</nav>
+				<h2 class="breadcrumb-title">
+					{% if il == "" %}
+					Tüm doktorlar
+					{% else %}
+					{{il}}
+					{% endif %}
+
+					{% if ilce != None %}
+					{{ilce}}
+					{% endif %}
+					araması için {{count}} sonuç bulundu</h2>
+			</div>
+
+
+
+			<!-- <div class="col-md-4 col-12 d-md-block d-none">
+							<div class="sort-by">
+								<span class="sort-title">Sırala</span>
+								<span class="sortby-fliter">
+									<select class="select">
+										<option>Select</option>
+										<option class="sorting">Yıldız</option>
+										<option class="sorting">Ücretli</option>
+										<option class="sorting">En son eklenenler</option>
+										<option class="sorting">Ücretsiz</option>
+									</select>
+								</span>
+							</div>
+						</div> -->
+
+
+
+
+
+		</div>
+	</div>
+</div>
+<!-- /Breadcrumb -->
+
+
+
+
+
+<!-- Page Content -->
+<div class="content">
+	<div class="container-fluid">
+
+		<div class="row">
+			<div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
+
+				<!-- Search Filter -->
+				<form action="{% url 'searchFilter' %}" method="post">
+					{% csrf_token %}
+					<div class="card search-filter">
+						<div class="card-header">
+							<h4 class="card-title mb-0">Sonuçları Filtrele</h4>
+						</div>
+						<div class="card-body">
+							<div class="filter-widget">
+								<div class="">
+									<input {% if tarih %} value="{{ tarih }}" {% endif %} type="date" name="date"
+										class="form-control datetimepicker" placeholder="Tarih Seç">
+								</div>
+							</div>
+							<div class="filter-widget">
+								<h4>Cinsiyet</h4>
+								<div>
+									<label class="custom_check">
+										<input {% if 'erkek' in cinsiyet %} checked {% endif %} type="checkbox"
+											name="erkek">
+										<span class="checkmark"></span> Erkek Doktor
+									</label>
+								</div>
+								<div>
+									<label class="custom_check">
+										<input {% if 'kadin' in cinsiyet %} checked {% endif %} type="checkbox"
+											name="kadın">
+										<span class="checkmark"></span> Kadın Doktor
+									</label>
+								</div>
+							</div>
+							<div class="filter-widget">
+								<h4>Kendin Yaz</h4>
+								<div class="">
+									<input {% if searchKey %} value="{{searchKey}}" {% endif %} type="text"
+										name="searchWords" class="form-control" placeholder="Alan Ara">
+								</div>
+							</div>
+							<div class="filter-widget">
+								<h4> Yada Belirli Alan Seç</h4>
+								<div>
+									<label class="custom_check">
+										<input {% if 'Çocuk Psikolojisi' in specialCheckArea %} checked {% endif %}
+											type="checkbox" name="select_specialist" value="Çocuk Psikolojisi">
+										<span class="checkmark"></span> Çocuk Psikolojisi
+									</label>
+								</div>
+								<div>
+									<label class="custom_check">
+										<input {% if 'Ergen Psikolojisi' in specialCheckArea %} checked {% endif %}
+											type="checkbox" name="select_specialist" value="Ergen Psikolojisi">
+										<span class="checkmark"></span> Ergen Psikolojisi
+									</label>
+								</div>
+								<div>
+									<label class="custom_check">
+										<input {% if 'Orta yaş sendromu' in specialCheckArea %} checked {% endif %}
+											type="checkbox" name="select_specialist" value="Orta yaş sendromu">
+										<span class="checkmark"></span> Orta yaş sendromu
+									</label>
+								</div>
+								<div>
+									<label class="custom_check">
+										<input {% if 'Ailevi Sorunlar' in specialCheckArea %} checked {% endif %}
+											type="checkbox" name="select_specialist" value="Ailevi Sorunlar">
+										<span class="checkmark"></span> Ailevi Sorunlar
+									</label>
+								</div>
+								<div>
+									<label class="custom_check">
+										<input {% if 'Ruhsal Çöküşler' in specialCheckArea %} checked {% endif %}
+											type="checkbox" name="select_specialist" value="Ruhsal Çöküşler">
+										<span class="checkmark"></span> Ruhsal Çöküşler
+									</label>
+								</div>
+								<div>
+									<label class="custom_check">
+										<input {% if 'Özel Sorunlar' in specialCheckArea %} checked {% endif %}
+											type="checkbox" name="select_specialist" value="Özel Sorunlar">
+										<span class="checkmark"></span> Özel Sorunlar
+									</label>
+								</div>
+							</div>
+							<div class="filter-widget">
+								<h4>Fiyat</h4>
+								<div>
+									<span>Min</span>
+									 <input {% if min %} value="{{min}}" {% endif %} {% if fiyatHatasi %}
+										style="width: 40%; border-color: red;" {% else %} style="width: 40%;" {% endif
+										%} type="number" name="minFiyat" class="form-control" placeholder="Min Fiyat">
+
+										
+
+									<span>Max</span>
+									<input {% if max %} value="{{max}}" {% endif %} style="width: 40%;"
+										type="number" name="maxFiyat" class="form-control" placeholder="Max Fiyat">
+								</div>
+							
+							</div>
+
+
+							<!-- <div class="range">
+								<div class="sliderValue">
+									<span>100</span>
+								</div>
+								<div class="field">
+									<div class="value left">
+										0</div>
+									<input type="range" min="10" max="200" value="100" steps="1">
+									<div class="value right">
+										200</div>
+								</div>
+							</div> -->
+
+
+
+
+
+
+							<div class="btn-search">
+								<button type="submit" class="btn btn-block">Ara</button>
+							</div>
+						</div>
+					</div>
+				</form>
+				<!-- /Search Filter -->
+
+			</div>
+
+			<div class="col-md-12 col-lg-8 col-xl-9">
+
+				<!-- Doctor Widget -->
+
+				{% if fiyatHatasi %}
+				<center>
+					<div class="alert alert-danger" role="alert">
+						{{fiyatHatasi}}
+					</div>
+				</center>
+				{% else %}
+
+				{% if doctors %}
+				{% else %}
+				<center>
+					<div class="alert alert-warning" role="alert">
+						<p>Aradığınız kriterlere uygun hiçbir doktor bulamadık</p>
+					</div>
+				</center>
+				{% endif %}
+
+				{% endif %}
+
+
+
+				{% if doctors %}
+				{% for doctor in doctors %}
+				<div class="card">
+					<div class="card-body">
+						<div class="doctor-widget">
+							<div class="doc-info-left">
+								<div class="doctor-img">
+									<a href="{% url 'showDoctorProfile' doctor.slug %}">
+										<img src="{{doctor.image.url}}" class="img-fluid" alt="User Image">
+									</a>
+								</div>
+								<div class="doc-info-cont">
+									<h4 class="doc-name"><a
+											href="{% url 'showDoctorProfile' doctor.slug %}">{{doctor.get_doctor_name}}</a>
+									</h4>
+									<p class="doc-speciality">{{doctor.define_profession}}</p>
+									<h5 class="doc-department">{{doctor.specializations|truncatechars:130}}</h5>
+									<div class="rating">
+
+										{% if doctor.average_star != 0 %}
+										{% for i in doctor.average_star|rjust:doctor.average_star %}
+										<i class="fas fa-star filled"></i>
+										{% endfor %}
+										{% endif %}
+										{% if doctor.none_average_star != 0 %}
+										{% for i in doctor.none_average_star|rjust:doctor.none_average_star %}
+										<i class="fas fa-star"></i>
+										{% endfor %}
+										{% endif %}
+										<span
+											class="d-inline-block average-rating">({{doctor.countOfPublishedComments}})</span>
+									</div>
+									<div class="clinic-details">
+										<p class="doc-location"><i class="fas fa-map-marker-alt"></i>
+											{% if doctor.city or doctor.country %}
+											{{doctor.city}}, {{doctor.country}}
+											{% else %}
+											Konum Belirtilmemiş
+											{% endif %}</p>
+										<ul class="clinic-gallery">
+
+											{% for image in doctor.get_clinic_images %}
+											<li>
+												<a href="{{image.clinic_image.url}}" data-fancybox="gallery">
+													<img src="{{image.clinic_image.url}}" alt="Feature">
+												</a>
+											</li>
+											{% endfor %}
+
+										</ul>
+									</div>
+									<!-- <div class="clinic-services">
+															{% if doctor.get_services|length > 0 %}
+																{% for item in doctor.get_services %}
+																	<span>{{item}}</span>
+																{% endfor %}
+															{% else %}
+																<p style="color: red;">Ekli bir hizmet bulunamamıştır</p>
+															{% endif %}
+														</div> -->
+								</div>
+							</div>
+							<div class="doc-info-right">
+								<div class="clini-infos">
+									<ul>
+										<li><i class="far fa-thumbs-up"></i> {{doctor.get_rating_satisfy}}%</li>
+										<li><i class="far fa-comment"></i> {{doctor.get_all_comments_count}} Yorum</li>
+										<li><i class="fas fa-map-marker-alt"></i> {% if doctor.city or doctor.country %}
+											{{doctor.city}}, {{doctor.country}}
+											{% else %}
+											Konum Belirtilmemiş
+											{% endif %}</li>
+										<li><i class="far fa-money-bill-alt"></i> {% if doctor.is_free %}
+											Ücretsiz
+											{% else %}
+											{{doctor.custom_price }} ₺ ({{doctor.appointment_minute }} dakika)
+											{% endif %} </li>
+									</ul>
+								</div>
+								<div class="clinic-booking">
+									<a class="view-pro-btn" href="{% url 'showDoctorProfile' doctor.slug %}">Profile
+										Bak</a>
+									<a class="apt-btn" href="{% url 'booking' doctor.slug %}">Randevu Ayarla</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+				{% endif %}
+
+
+				<!-- /Doctor Widget -->
+
+
+
+
+				{% if count > 5 %}
+				<div class="load-more text-center">
+					<a class="btn btn-primary btn-sm" href="javascript:void(0);">Daha Fazla Yükle</a>
+				</div>
+				{% endif %}
+
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<!-- /Page Content -->
+{% endif %}
+
+
+
+
+
+
+
+
+{% endblock content %}

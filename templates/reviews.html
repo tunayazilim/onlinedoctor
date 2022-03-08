@@ -1,0 +1,189 @@
+
+			{% extends 'base.html' %}
+
+			
+			{% block content %}
+				
+			
+				
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Anasayfa</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Yorumlar</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Yorumlar</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+							{% include 'doctor-profile-sidebar.html' %}		
+						</div>
+						<div class="col-md-7 col-lg-8 col-xl-9">
+							<div class="doc-review review-listing">
+
+								{% if messages %}
+							<ul class="messages">
+								{% for message in messages %}
+					
+								{% if  'error' in message.tags and "commentaddashboard" in message.extra_tags  %}
+								<div class="alert alert-danger" role="alert">
+					
+									<center><strong>{{message}}</strong></center>
+								</div>
+								{% elif 'success' in message.tags and "commentaddashboard" in message.extra_tags  %}
+								<div class="alert alert-success" role="alert">
+					
+									<center><strong>{{message}}</strong></center>
+								</div>
+								{% endif %}
+					
+					
+					
+								{% endfor %}
+							</ul>
+							{% endif %}
+							
+								<!-- Review Listing -->
+								<ul class="comments-list">
+								
+									<!-- Comment List -->
+									
+									
+									{% if comments %}
+										{% for comment in comments %}
+											
+											{% if comment.is_parent %}
+												<li>
+													<div class="comment">
+														<img class="avatar rounded-circle" alt="User Image" src="{{comment.comment_user.image.url}}">
+														<div class="comment-body">
+															<div class="meta-data">
+																<span class="comment-author">{{comment.comment_user.unvan}} {{comment.comment_user.get_full_name}}</span>
+																<span class="comment-date">Önce Paylaşıldı: {{ comment.updated_date|timesince }}</span>
+																<div class="review-count rating">
+																	{% if comment.star != 0 %}
+																		{% for i in comment.star|rjust:comment.star %}	
+																			<i class="fas fa-star filled"></i>
+																		{% endfor %}
+																	{% endif %}
+																	{% if comment.none_star != 0 %}
+																		{% for i in comment.none_star|rjust:comment.none_star %}	
+																			<i class="fas fa-star"></i>
+																		{% endfor %} 
+																	{% endif %}
+																</div>
+															</div>
+															
+
+															<!-- <p class="recommended"><i class="far fa-thumbs-up"></i> I recommend the doctor</p> -->
+															<p style="color: black; font-weight: bold;"  class="comment-content">
+																<pre style="color: black; font-weight: bold;"  class="comment-content">{{comment.comment}}</pre>
+																<!-- {% if comment.lengthOfCommentIsLess %}
+																	{{comment.addSpaceToComment}}
+																{% endif %} -->
+															
+															</p>
+															<div class="comment-reply">
+																<a  onclick="toggleText('{{comment.pk}}')" class="comment-btn" href="#">
+																	<i class="fas fa-reply"></i> Yanıtla
+																</a>
+																<form name="hideform" id={{ comment.pk }} style="display: none" action="{% url 'showCommentsInDoctorDashboard' comment.pk %}" method="post">
+																	{% csrf_token %}
+																	<div class="form-group">
+																		<label>Yorumunuz</label>
+																		<textarea required maxlength="400" rows="6" cols="50"  name="comment" class="form-control"></textarea>
+																	  
+																	  <div class="d-flex justify-content-between mt-3"></div>
+																	</div>
+																	<hr>
+																
+																	<div class="submit-section">
+																		<button type="submit" class="btn btn-primary submit-btn">Yorumu Kaydet</button>
+																	</div>
+																</form>
+															   <!-- <p class="recommend-btn">
+																<span>Recommend?</span>
+																<a href="#" class="like-btn">
+																	<i class="far fa-thumbs-up"></i> Yes
+																</a>
+																<a href="#" class="dislike-btn">
+																	<i class="far fa-thumbs-down"></i> No
+																</a>
+															</p> -->
+															</div>
+														</div>
+													</div>
+													
+													<!-- Comment Reply -->
+													
+													{% if comment.children %}
+														<ul class="comments-reply">
+														
+															<!-- Comment Reply List -->
+															
+															{% for com in comment.children %}
+																<li>
+																	<div class="comment">
+																		<img class="avatar rounded-circle" alt="User Image" src="{{com.comment_user.image.url}}">
+																		<div class="comment-body">
+																			<div class="meta-data">
+																				<span class="comment-author">{{com.comment_user.unvan}} {{com.comment_user.get_full_name}}</span>
+																				<span class="comment-date">Önce Paylaşıldı: {{ com.updated_date|timesince }}</span>
+																			</div>
+																			<p style="color: black; font-weight: bold;" class="comment-content">
+																				{{com.comment}}
+																			</p>
+																			<div class="comment-reply">
+																				
+																				
+																			</div>
+																		</div>
+																	</div>
+																</li>
+															{% endfor %}
+																
+															<!-- /Comment Reply List -->
+															
+														</ul>
+													{% endif %}
+														
+													<!-- /Comment Reply -->
+													
+												</li>
+											{% endif %}
+												
+										{% endfor %}
+									{% else %}
+										<center><p>Henüz size ait yorum bulunmamaktadır.</p></center>
+									{% endif %}
+										
+										
+									<!-- /Comment List -->
+									
+												
+									
+								</ul>
+								<!-- /Comment List -->
+								
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+			{% endblock content %}

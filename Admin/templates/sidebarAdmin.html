@@ -1,0 +1,204 @@
+
+{% load countOfWaitingDoctors %}
+{% count_of_waiting_doctors as countWaitingDoctors %}
+
+
+			<!-- Sidebar -->
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-inner slimscroll">
+					<div id="sidebar-menu" class="sidebar-menu">
+						<ul>
+							<li class="menu-title"> 
+								<span>Main</span>
+							</li>
+							<li 
+							{% if active == "anasayfa" %}
+								class="active"
+							{% endif %}
+								> 
+								<a href="{% url 'indexAdmin' %}"><i class="fe fe-home"></i> <span>Anasayfa</span></a>
+							</li>
+							<!-- <li {% if active == "allAppoitments" %}
+								class="active"
+							{% endif %}> 
+								<a href="{% url 'appoitmentsAdmin' %}"><i class="fe fe-layout"></i> <span>Randevular</span></a>
+							</li> -->
+
+							<li class="submenu">
+								<a href="#"><i class="fe fe-document"></i> <span> Randevular</span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a {% if active == "allAppoitments" %}
+										class="active"
+									{% endif %} href="{% url 'appoitmentsAdmin' %}">Onaylanmış Randevular</a></li>
+									<li><a {% if active == "deletedAppoitments" %}
+										class="active"
+									{% endif %} href="{% url 'deletedAppoitmentsAdmin' %}">Reddedilenler</a></li>
+								</ul>
+							</li>
+
+
+
+							<li {% if active == "allSpecialities" %}
+								class="active"
+							{% endif %}> 
+								<a href="{% url 'specialitiesAdmin' %}"><i class="fe fe-users"></i> <span>Hizmetler</span></a>
+							</li>
+							<li {% if active == "listOfWatingDoctors" %}
+							class="active"
+						{% endif %}> 
+								<a href="{% url 'listWaitingDoctors' %}"><i class="fe fe-users"></i> <span style="font-size: 14px;">Onay Bekleyen Doktorlar</span>
+								{% if countWaitingDoctors %}
+								&nbsp;
+								<small class="unread-msg" style="font-weight: bold; color: red;">  ({{countWaitingDoctors}})</small>
+								{% endif %}
+								
+								
+								</a>
+							</li>
+							<li {% if active == "allDoctors" %}
+							class="active"
+						{% endif %}> 
+								<a href="{% url 'allDoctors' %}"><i class="fe fe-user-plus"></i> <span>Doktorlar</span></a>
+							</li>
+							<li {% if active == "allPatients" %}
+							class="active"
+						{% endif %} > 
+								<a href="{% url 'allPatients' %}"><i class="fe fe-user"></i> <span>Hastalar</span></a>
+							</li>
+							<li {% if active == "allReviews" %}
+							class="active"
+						{% endif %}> 
+								<a href="{% url 'reviewsAdmin' %}"><i class="fe fe-star-o"></i> <span>Yorumlar</span></a>
+							</li>
+							<!-- <li class="submenu"> 
+								<a href="settings.html"><i class="fe fe-vector"></i> <span>İşlemler</span><span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="invoice-report.html">Genel Ayarlar</a></li>
+									<li ><a {% if active == "meta_ayarlar" %}
+										class="active"
+									{% endif %} href="{% url 'showPagesAdmin' %}">Meta Ayarları</a></li>
+								</ul>
+							</li> -->
+							<li class="submenu"> 
+								<a href="settings.html"><i class="fe fe-vector"></i> <span>Ayarlar</span><span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a {% if active == "bannersAdmin" %}
+										class="active"
+									{% endif %} href="{% url 'allBannersAdmin' %}">Banner</a></li>
+									<li><a {% if active == "alanYazilarAdmin" %}
+										class="active"
+									{% endif %} href="{% url 'alanYaziListeleAdmin' %}">Alan Yazı Kısmı</a></li>
+									<li><a {% if active == "indexYaziAdmin" %}
+										class="active"
+									{% endif %} href="{% url 'allIndexYaziAdmin' %}">Hakkımızda</a></li>
+									<li><a {% if active == "footerAdmin" %}
+										class="active"
+									{% endif %} href="{% url 'updateFooterModelAdmin' %}">Footer Ayarlar</a></li>
+									<li><a {% if active == "featureDoctorAdmin" %}
+										class="active"
+									{% endif %} href="{% url 'updateDoctorFeatureIndexAdmin' %}">Doktor Özellik Index Ayarlar</a></li>
+									<li><a {% if active == "featuresIndexAdmin" %}
+										class="active"
+									{% endif %} href="{% url 'allFeaturesAdmin' %}">Doktor Özellik Image Ayarlar</a></li>
+									<li ><a {% if active == "meta_ayarlar" %}
+										class="active"
+									{% endif %} href="{% url 'showPagesAdmin' %}">Meta Ayarları</a></li>
+									<li ><a {% if active == "logoAdmin" %}
+										class="active"
+									{% endif %} href="{% url 'updatelogoModelAdmin' %}">Logo Ayarları</a></li>
+
+
+									<a href="javascript:void(0);"> <span>Menu Ayarları</span> <span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="menu-ayarlari-admin?type=doktor"><span>Doktor Menüsü</span></a></li>
+										<li><a href="menu-ayarlari-admin?type=hasta"><span>Hasta Menüsü</span></a></li>
+										<li><a href="menu-ayarlari-admin?type=nouser"><span>Giriş Yapılmadan</span></a></li>
+										
+									</ul>
+
+								</ul>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-document"></i> <span> Faturalar</span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a {% if active == "faturalar" %}
+										class="active"
+									{% endif %} href="{% url 'allInvoiceReportsAdmin' %}">Faturalar</a></li>
+								</ul>
+							</li>
+							<!-- <li class="menu-title"> 
+								<span>Pages</span>
+							</li>
+							<li> 
+								<a href="profile.html"><i class="fe fe-user-plus"></i> <span>Profile</span></a>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-document"></i> <span> Authentication </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="login.html"> Login </a></li>
+									<li><a href="register.html"> Register </a></li>
+									<li><a href="forgot-password.html"> Forgot Password </a></li>
+									<li><a href="lock-screen.html"> Lock Screen </a></li>
+								</ul>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-warning"></i> <span> Error Pages </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="error-404.html">404 Error </a></li>
+									<li><a href="error-500.html">500 Error </a></li>
+								</ul>
+							</li>
+							<li> 
+								<a href="blank-page.html"><i class="fe fe-file"></i> <span>Blank Page</span></a>
+							</li>
+							<li class="menu-title"> 
+								<span>UI Interface</span>
+							</li>
+							<li> 
+								<a href="components.html"><i class="fe fe-vector"></i> <span>Components</span></a>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-layout"></i> <span> Forms </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="form-basic-inputs.html">Basic Inputs </a></li>
+									<li><a href="form-input-groups.html">Input Groups </a></li>
+									<li><a href="form-horizontal.html">Horizontal Form </a></li>
+									<li><a href="form-vertical.html"> Vertical Form </a></li>
+									<li><a href="form-mask.html"> Form Mask </a></li>
+									<li><a href="form-validation.html"> Form Validation </a></li>
+								</ul>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-table"></i> <span> Tables </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="tables-basic.html">Basic Tables </a></li>
+									<li><a href="data-tables.html">Data Table </a></li>
+								</ul>
+							</li>
+							<li class="submenu">
+								<a href="javascript:void(0);"><i class="fe fe-code"></i> <span>Multi Level</span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li class="submenu">
+										<a href="javascript:void(0);"> <span>Level 1</span> <span class="menu-arrow"></span></a>
+										<ul style="display: none;">
+											<li><a href="javascript:void(0);"><span>Level 2</span></a></li>
+											<li class="submenu">
+												<a href="javascript:void(0);"> <span> Level 2</span> <span class="menu-arrow"></span></a>
+												<ul style="display: none;">
+													<li><a href="javascript:void(0);">Level 3</a></li>
+													<li><a href="javascript:void(0);">Level 3</a></li>
+												</ul>
+											</li>
+											<li><a href="javascript:void(0);"> <span>Level 2</span></a></li>
+										</ul>
+									</li>
+									<li>
+										<a href="javascript:void(0);"> <span>Level 1</span></a>
+									</li>
+								</ul>
+							</li> -->
+						</ul>
+					</div>
+                </div>
+            </div>
+			<!-- /Sidebar -->

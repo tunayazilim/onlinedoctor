@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+	
+	
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Anasayfa</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Yorum İstekleriniz</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Yorum İstekleriniz</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">						
+							{% include 'doctor-profile-sidebar.html' %}		
+						</div>
+						
+						<div class="col-md-7 col-lg-8 col-xl-9">
+							<div class="appointments">
+							
+								<!-- Appointment List -->
+
+								{% if messages %}
+							<ul class="messages">
+								{% for message in messages %}
+					
+								{% if  'error' in message.tags and "deleteWaitingComment" in message.extra_tags  %}
+								<div class="alert alert-danger" role="alert">
+					
+									<center><strong>{{message}}</strong></center>
+								</div>
+								{% elif 'success' in message.tags and "deleteWaitingComment" in message.extra_tags  %}
+								<div class="alert alert-success" role="alert">
+					
+									<center><strong>{{message}}</strong></center>
+								</div>
+								{% endif %}
+					
+					
+					
+								{% endfor %}
+							</ul>
+							{% endif %}
+								
+								
+								{% if comments %}
+									{% for comment in comments %}
+										<div class="appointment-list">
+											<div class="profile-info-widget">
+												<a href="{% url 'detailWaitingComment' comment.pk %}" class="booking-doc-img">
+													<img src="{{comment.comment_user.image.url}}" alt="User Image">
+												</a>
+												<div class="profile-det-info">
+													<h3><a href="{% url 'detailWaitingComment' comment.pk %}">{{comment.comment_user.get_full_name}}</a></h3>
+													<div class="patient-details">
+														<h5> <div class="review-count rating">
+															
+															{% if comment.is_parent %}
+																{% if comment.star != 0 %}
+																	{% for i in comment.star|rjust:comment.star %}	
+																		<i class="fas fa-star filled"></i>
+																	{% endfor %}
+																{% endif %}
+																{% if comment.none_star != 0 %}
+																	{% for i in comment.none_star|rjust:comment.none_star %}	
+																		<i class="fas fa-star"></i>
+																	{% endfor %} 
+																{% endif %}
+															{% else %}
+															<p><span style="color: green;">{{comment.parent.comment_user.get_full_name}}</span> adlı kişiye yanıt olarak</p>
+															{% endif %}
+																
+													</div></h5>
+														<h5><i class="far fa-clock"></i> {{comment.created_date.date}}</h5>
+														
+														<h5><i class="fas fa-envelope"></i> {{comment.comment_user.email}}</h5>
+														<h5><i class="far fa-comment"></i> {{comment.comment|truncatechars:50 }}</h5>
+														
+														<!-- <h5 class="mb-0"><i class="fas fa-phone"></i> +1 923 782 4575</h5> -->
+													</div>
+												</div>
+											</div>
+											<div class="appointment-action">
+												<a href="{% url 'detailWaitingComment' comment.pk %}" class="btn btn-sm bg-info-light">
+													<i class="far fa-eye"></i> Görüntüle
+												</a>
+												<a href="{% url 'acceptWaitingComment' comment.pk %}" class="btn btn-sm bg-success-light">
+													<i class="fas fa-check"></i> Kabul Et
+												</a>
+												<a onclick="return confirm('Bu yorumu silmek istediğinizden emin misiniz?');" href="{% url 'deleteWaitingComment' comment.pk %}" class="btn btn-sm bg-danger-light">
+													<i class="fas fa-times"></i> Sil
+												</a>
+											</div>
+										</div>
+		
+									{% endfor %}
+								{% else %}
+								<center><p>Yorum isteğiniz bulunmamaktadır.</p></center>
+								{% endif %}
+									
+									
+
+
+								<!-- /Appointment List -->
+							
+								
+								
+							
+								
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			
+{% endblock content %}

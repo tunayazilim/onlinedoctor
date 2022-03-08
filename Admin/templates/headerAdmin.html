@@ -1,0 +1,128 @@
+
+{% load static %}
+
+{% load notifications %}
+{% notificationsOfAdmin as notifications %}
+
+
+<!-- Header -->
+<div class="header">
+			
+    <!-- Logo -->
+    <div class="header-left">
+        <a href="{% url 'indexAdmin' %}" class="logo">
+            <img src="{% static 'assetsAdmin/img/logo.png' %}" alt="Logo">
+        </a>
+        <a href="index.html" class="logo logo-small">
+            <img src="{% static 'assetsAdmin/img/logo-small.png' %}" alt="Logo" width="30" height="30">
+        </a>
+    </div>
+    <!-- /Logo -->
+    
+    <a href="javascript:void(0);" id="toggle_btn">
+        <i class="fe fe-text-align-left"></i>
+    </a>
+    
+    <div class="top-nav-search">
+        <form>
+            <input type="text" class="form-control" placeholder="Search here">
+            <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+    
+    <!-- Mobile Menu Toggle -->
+    <a class="mobile_btn" id="mobile_btn">
+        <i class="fa fa-bars"></i>
+    </a>
+    <!-- /Mobile Menu Toggle -->
+    
+    <!-- Header Right Menu -->
+    <ul class="nav user-menu">
+
+        <!-- Notifications -->
+        <li class="nav-item dropdown noti-dropdown">
+            <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                <i class="fe fe-bell"></i> <span class="badge badge-pill">{{notifications|length}}</span>
+            </a>
+            <div class="dropdown-menu notifications">
+                <div class="topnav-dropdown-header">
+                    <span class="notification-title">Bildirimler</span>
+                    <!-- <a href="javascript:void(0)" class="clear-noti"> Hepsini sil </a> -->
+                </div>
+                <div class="noti-content">
+                    <ul class="notification-list">
+                        
+                        {% for not in notifications %}
+                            <li class="notification-message">
+                                <a href="#">
+                                    <div class="media">
+                                        {% if not.type == "waitingDoctor" %}
+                                            <span class="avatar avatar-sm">
+                                                <img class="avatar-img rounded-circle" alt="User Image" src="{{not.user.image.url}}">
+                                            </span>
+                                            <div class="media-body">
+                                                <p class="noti-details"><span class="noti-title">{{not.user.get_doctor_name}}</span> siteye kayıt olmak için sizin onayınızı bekliyor</p>
+                                                <p class="noti-time"><span class="notification-time">{{not.user.created_date|timesince}} önce</span></p>
+                                            </div>
+                                        {% elif not.type == "appointment" %}
+                                            <span class="avatar avatar-sm">
+                                                <img class="avatar-img rounded-circle" alt="User Image" src="{{not.appointment.patient.image.url}}">
+                                            </span>
+                                            <div class="media-body">
+                                                <p class="noti-details"><span class="noti-title">{{not.appointment.patient.get_full_name}}</span> adlı hasta ile <span class="noti-title">{{not.appointment.doctor.get_doctor_name}} </span> adlı doktorunuz arasında randevu oluşturulmuştur</p>
+                                                <p class="noti-time"><span class="notification-time">{{not.appointment.date|timesince}} önce</span></p>
+                                            </div>
+                                        {% elif not.type == "deletedAppointment" %}
+                                        <span class="avatar avatar-sm">
+                                            <img class="avatar-img rounded-circle" alt="User Image" src="{{not.appointment.patient.image.url}}">
+                                        </span>
+                                        <div class="media-body">
+                                            <p class="noti-details"><span class="noti-title">{{not.appointment.patient.get_full_name}}</span> adlı hasta ile <span class="noti-title">{{not.appointment.doctor.get_doctor_name}} </span> adlı doktorunuz arasında oluşan randevu isteği doktorunuz reddetmiştir.</p>
+                                            <p class="noti-time"><span class="notification-time">{{not.appointment.date|timesince}} önce</span></p>
+                                        </div>
+                                        {% endif %}
+                                        
+                                    </div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                            
+                        
+                        
+                        
+                    </ul>
+                </div>
+                <!-- <div class="topnav-dropdown-footer">
+                    <a href="#">View all Notifications</a>
+                </div> -->
+            </div>
+        </li>
+        <!-- /Notifications -->
+        
+        <!-- User Menu -->
+        <li class="nav-item dropdown has-arrow">
+            <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                <span class="user-img"><img class="rounded-circle" src="{{request.user.image.url}}" width="31" alt="Ryan Taylor"></span>
+            </a>
+            <div class="dropdown-menu">
+                <div class="user-header">
+                    <div class="avatar avatar-sm">
+                        <img src="{{request.user.image.url}}" alt="User Image" class="avatar-img rounded-circle">
+                    </div>
+                    <div class="user-text">
+                        <h6>{{request.user.get_full_name}}</h6>
+                        <p class="text-muted mb-0">Admin</p>
+                    </div>
+                </div>
+                <a class="dropdown-item" href="{% url 'profileAdminShow' %}">Profilim</a>
+                <a class="dropdown-item" href="settings.html">Ayarlar</a>
+                <a class="dropdown-item" href="{% url 'logoutAdmin' %}">Çıkış</a>
+            </div>
+        </li>
+        <!-- /User Menu -->
+        
+    </ul>
+    <!-- /Header Right Menu -->
+    
+</div>
+<!-- /Header -->

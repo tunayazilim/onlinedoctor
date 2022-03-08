@@ -1,0 +1,951 @@
+{% load static %}
+
+
+{% load load_active_day %}
+{% load_active_day_of request as activated_day_of %}
+
+{% load footer_part %}
+{% footerPart as footer %}
+
+
+
+{% load logolar %}
+{% logolars as logo %}
+
+
+<!DOCTYPE html> 
+<html lang="en">
+	
+<!-- doccure/schedule-timings.html  30 Nov 2019 04:12:09 GMT -->
+<head>
+		<meta charset="utf-8">
+		<title>Doccure</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		
+		<!-- Favicons -->
+		<link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/fontawesome.min.css' %}">
+		<link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}">
+		
+		<!-- Select2 CSS -->
+		<link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+	
+</head>
+	<body>
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+		
+		{% include 'header.html' %}
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Anasayfa</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Randevu Saat Ayarları</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Randevu Saat Ayarları</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+						
+							{% include 'doctor-profile-sidebar.html' %}	
+							
+						</div>
+
+
+						
+						<div class="col-md-7 col-lg-8 col-xl-9">
+							
+							<div class="row">
+
+
+
+								{% if messages %}
+							<ul class="messages">
+								{% for message in messages %}
+					
+								{% if  'error' in message.tags  %}
+								<div class="alert alert-danger" role="alert">
+					
+									<center><strong>{{message}}</strong></center>
+								</div>
+								{% elif 'success' in message.tags  %}
+								<div class="alert alert-success" role="alert">
+					
+									<center><strong>{{message}}</strong></center>
+								</div>
+								{% endif %}
+					
+					
+					
+								{% endfor %}
+							</ul>
+							{% endif %}
+
+
+
+
+
+
+								<div class="col-sm-12">
+									<div class="card">
+										<div class="card-body">
+											<h4 class="card-title">Randevu Saat Ayarları</h4>
+											<div class="profile-box">
+
+
+												<div class="row">
+													<div class="col-md-12">
+														<div class="card schedule-widget mb-0">
+														
+															<!-- Schedule Header -->
+															<div class="schedule-header">
+															
+																<!-- Schedule Nav -->
+																<div class="schedule-nav">
+																	<ul class="nav nav-tabs nav-justified" name="day">
+																		
+																		{% for i in days %}
+																				
+																			{% if i == "Monday" %}
+																				<li class="nav-item"  value="Pazartesi">
+																					<a class="nav-link 
+																					{% if request.user.active_day == 'Pazartesi' %}
+																						active
+																					{% endif %}"
+																						onclick="saveDay('Pazartesi');" data-toggle="tab" href="#slot_monday">Pazartesi<br><p style="font-size: 12px; color: black;">{{dates.Pazartesi}}</p></a>
+																				</li>
+																			{% elif i == "Tuesday" %}
+																				<li class="nav-item"  value="Salı">
+																					<a class="nav-link {% if request.user.active_day == 'Salı' %}
+																					active
+																				{% endif %}" onclick="saveDay('Salı');" data-toggle="tab" href="#slot_tuesday">Salı<br><p style="font-size: 12px; color: black;">{{dates.Salı}}</p></a>
+																				</li>
+																			{% elif i == "Wednesday" %}
+																				<li class="nav-item"  value="Çarşamba">
+																					<a class="nav-link {% if request.user.active_day == 'Çarşamba' %}
+																					active
+																				{% endif %}"  data-toggle="tab" onclick="saveDay('Çarşamba');" href="#slot_wednesday">Çarşamba<br><p style="font-size: 12px; color: black;">{{dates.Çarşamba}}</p></a>
+																				</li>
+																			{% elif i == "Thursday" %}
+																				<li class="nav-item"  value="Perşembe">
+																					<a class="nav-link {% if request.user.active_day == 'Perşembe' %}
+																					active
+																				{% endif %}" onclick="saveDay('Perşembe');" data-toggle="tab" href="#slot_thursday">Perşembe<br><p style="font-size: 12px; color: black;">{{dates.Perşembe}}</p></a>
+																				</li>
+																			{% elif i == "Friday" %}
+																				<li class="nav-item"  value="Cuma">
+																					<a class="nav-link {% if request.user.active_day == 'Cuma' %}
+																					active
+																				{% endif %}" onclick="saveDay('Cuma');" data-toggle="tab" href="#slot_friday">Cuma<br><p style="font-size: 12px; color: black;">{{dates.Cuma}}</p></a>
+																				</li>
+																			{% elif i == "Saturday" %}
+																				<li class="nav-item"  value="Cumartesi">
+																					<a class="nav-link {% if request.user.active_day == 'Cumartesi' %}
+																					active
+																				{% endif %}" onclick="saveDay('Cumartesi');" data-toggle="tab" href="#slot_saturday">Cumartesi<br><p style="font-size: 12px; color: black;">{{dates.Cumartesi}}</p></a>
+																				</li>
+																			{% elif i == "Sunday" %}
+																				<li class="nav-item" value="Pazar">
+																					<a class="nav-link {% if request.user.active_day == 'Pazar' %}
+																					active
+																				{% endif %}" onclick="saveDay('Pazar');"  data-toggle="tab" href="#slot_sunday">Pazar<br><p style="font-size: 12px; color: black;">{{dates.Pazar}}</p></a>
+																				</li>
+																			
+																			{% endif %}
+
+															
+																		{% endfor %}															
+																		
+																	</ul>
+																</div>
+																<!-- /Schedule Nav -->
+																
+															</div>
+															<!-- /Schedule Header -->
+															
+
+
+
+
+
+															
+															<!-- Schedule Content -->
+															<div class="tab-content schedule-cont">
+															
+																<!-- Sunday Slot -->
+																<div id="slot_sunday" class="tab-pane fade {% if request.user.active_day == 'Pazar' %}
+																show active
+															{% endif %}">
+																	<h4 class="card-title d-flex justify-content-between">
+																		<span>Randevu Saatleriniz</span> 
+																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-edit mr-1"></i> Ekle ve Düzenle</a>
+																	</h4>
+																	<div class="doc-times">
+																		{% if sundayExist == "true" %}
+																			{% for schedule in schedules %}						
+																				{% if schedule.day == "Pazar" %}
+																					<div class="doc-slot-list" {% if schedule.is_paid == "yes" %}
+																					style="background-color: gray;"
+																					{% endif %}>
+																						{{schedule.starting_time}} - {{schedule.finishing_time}}
+																						{% if schedule.is_paid == "no" %}
+																						<a href="{% url 'deleteTimeScheduleModel' schedule.pk %}" onclick="return confirm('Bu randevu zamanını silmek istediğinize emin misiniz?');" class="delete_schedule">
+																							<i class="fa fa-times"></i>
+																						</a>
+																					{% endif %} 	
+																							
+																						<br>
+																						{{schedule.date}}
+																					</div>
+																				{% endif %}
+																			
+																			{% endfor %}
+																		{% else %}
+																			<p class="text-muted mb-0">Henüz ekli bir randevu saat aralığınız bulunmamaktadır.</p>
+																		{% endif %}
+																	</div>
+																</div>
+																<!-- /Sunday Slot -->
+
+																<!-- Monday Slot -->
+																<div id="slot_monday" class="tab-pane fade {% if request.user.active_day == 'Pazartesi' %}
+																show active
+															{% endif %}">
+																	<h4 class="card-title d-flex justify-content-between">
+																		<span>Randevu Saatleriniz</span> 
+																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-edit mr-1"></i>Ekle ve Düzenle</a>
+																	</h4>
+																	
+																	<!-- Slot List -->
+																	<div class="doc-times">
+
+																		
+																	
+																	{% if mondayExist == "true" %}
+																		{% for schedule in schedules %}						
+																			{% if schedule.day == "Pazartesi" %}
+																				<div class="doc-slot-list" {% if schedule.is_paid == "yes" %}
+																				style="background-color: gray;"
+																				{% endif %}>
+																					{{schedule.starting_time}} - {{schedule.finishing_time}}
+																					{% if schedule.is_paid == "no" %}
+																							<a href="{% url 'deleteTimeScheduleModel' schedule.pk %}" onclick="return confirm('Bu randevu zamanını silmek istediğinize emin misiniz?');" class="delete_schedule">
+																								<i class="fa fa-times"></i>
+																							</a>
+																						{% endif %}
+																					<br>
+																					{{schedule.date}}
+																				</div>
+																			{% endif %}
+																		
+																		{% endfor %}
+																	{% else %}
+																		<p class="text-muted mb-0">Henüz ekli bir randevu saat aralığınız bulunmamaktadır.</p>
+																	{% endif %}
+																		
+																			
+																		
+																		
+																	</div>
+																	<!-- /Slot List -->
+																	
+																</div>
+																<!-- /Monday Slot -->
+
+																<!-- Tuesday Slot -->
+																<div id="slot_tuesday" class="tab-pane fade {% if request.user.active_day == 'Salı' %}
+																show active
+															{% endif %}">
+																	<h4 class="card-title d-flex justify-content-between">
+																		<span>Randevu Saatleriniz</span> 
+																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-edit mr-1"></i> Ekle ve Düzenle</a>
+																	</h4>
+																	<div class="doc-times">
+																		{% if tuesdayExist == "true" %}
+																			{% for schedule in schedules %}						
+																				{% if schedule.day == "Salı" %}
+																					<div class="doc-slot-list" {% if schedule.is_paid == "yes" %}
+																					style="background-color: gray;"
+																					{% endif %}>
+																						{{schedule.starting_time}} - {{schedule.finishing_time}}
+																						{% if schedule.is_paid == "no" %}
+																							<a href="{% url 'deleteTimeScheduleModel' schedule.pk %}" onclick="return confirm('Bu randevu zamanını silmek istediğinize emin misiniz?');" class="delete_schedule">
+																								<i class="fa fa-times"></i>
+																							</a>
+																						{% endif %}
+																						<br>
+																						{{schedule.date}}
+																					</div>
+																				{% endif %}										
+																			{% endfor %}
+																		{% else %}
+																		<p class="text-muted mb-0">Henüz ekli bir randevu saat aralığınız bulunmamaktadır.</p>
+																		{% endif %}
+																	</div>
+																	
+																</div>
+																<!-- /Tuesday Slot -->
+
+																<!-- Wednesday Slot -->
+																<div id="slot_wednesday" class="tab-pane fade {% if request.user.active_day == 'Çarşamba' %}
+																show active
+															{% endif %}">
+																	<h4 class="card-title d-flex justify-content-between">
+																		<span>Randevu Saatleriniz</span> 
+																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-edit mr-1"></i> Ekle ve Düzenle</a>
+																	</h4>
+																	<div class="doc-times">
+																	
+																		{% if wednesdayExist == "true" %}
+																			{% for schedule in schedules %}						
+																				{% if schedule.day == "Çarşamba" %}
+																					<div class="doc-slot-list" {% if schedule.is_paid == "yes" %}
+																					style="background-color: gray;"
+																					{% endif %}>
+																						{{schedule.starting_time}} - {{schedule.finishing_time}}
+																						{% if schedule.is_paid == "no" %}
+																							<a href="{% url 'deleteTimeScheduleModel' schedule.pk %}" onclick="return confirm('Bu randevu zamanını silmek istediğinize emin misiniz?');" class="delete_schedule">
+																								<i class="fa fa-times"></i>
+																							</a>
+																						{% endif %}
+																						<br>
+																						{{schedule.date}}
+																					</div>
+																				{% endif %}										
+																			{% endfor %}
+																		{% else %}
+																		<p class="text-muted mb-0">Henüz ekli bir randevu saat aralığınız bulunmamaktadır.</p>
+																		{% endif %}
+																	</div>
+																</div>
+																<!-- /Wednesday Slot -->
+
+																<!-- Thursday Slot -->
+																<div id="slot_thursday" class="tab-pane fade {% if request.user.active_day == 'Perşembe' %}
+																show active
+															{% endif %}">
+																	<h4 class="card-title d-flex justify-content-between">
+																		<span>Randevu Saatleriniz</span> 
+																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-edit mr-1"></i> Ekle ve Düzenle</a>
+																	</h4>
+																	<div class="doc-times">
+																		{% if thursdayExist == "true" %}
+																			{% for schedule in schedules %}						
+																				{% if schedule.day == "Perşembe" %}
+																					<div class="doc-slot-list" {% if schedule.is_paid == "yes" %}
+																					style="background-color: gray;"
+																					{% endif %}>
+																						{{schedule.starting_time}} - {{schedule.finishing_time}}
+																						{% if schedule.is_paid == "no" %}
+																							<a href="{% url 'deleteTimeScheduleModel' schedule.pk %}" onclick="return confirm('Bu randevu zamanını silmek istediğinize emin misiniz?');" class="delete_schedule">
+																								<i class="fa fa-times"></i>
+																							</a>
+																						{% endif %}
+																						<br>
+																						{{schedule.date}}
+																					</div>
+																				{% endif %}										
+																			{% endfor %}
+																		{% else %}
+																		<p class="text-muted mb-0">Henüz ekli bir randevu saat aralığınız bulunmamaktadır.</p>
+																		{% endif %}
+																	</div>
+																</div>
+																<!-- /Thursday Slot -->
+
+																<!-- Friday Slot -->
+																<div id="slot_friday" class="tab-pane fade {% if request.user.active_day == 'Cuma' %}
+																show active
+															{% endif %}">
+																	<h4 class="card-title d-flex justify-content-between">
+																		<span>Randevu Saatleriniz</span> 
+																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-edit mr-1"></i> Ekle ve Düzenle</a>
+																	</h4>
+																	<div class="doc-times">
+																		{% if fridayExist == "true" %}
+																			{% for schedule in schedules %}						
+																				{% if schedule.day == "Cuma" %}
+																					<div class="doc-slot-list" 
+																					{% if schedule.is_paid == "yes" %}
+																					style="background-color: gray;"
+																					{% endif %}
+																						>
+																						{{schedule.starting_time}} - {{schedule.finishing_time}}
+																						
+																						{% if schedule.is_paid == "no" %}
+																							<a href="{% url 'deleteTimeScheduleModel' schedule.pk %}" onclick="return confirm('Bu randevu zamanını silmek istediğinize emin misiniz?');" class="delete_schedule">
+																								<i class="fa fa-times"></i>
+																							</a>
+																						{% endif %}
+																							
+																						<br>
+																						{{schedule.date}}
+																					</div>
+																				{% endif %}										
+																			{% endfor %}
+																		{% else %}
+																		<p class="text-muted mb-0">Henüz ekli bir randevu saat aralığınız bulunmamaktadır.</p>
+																		{% endif %}
+																	</div>
+																</div>
+																<!-- /Friday Slot -->
+
+																<!-- Saturday Slot -->
+																<div id="slot_saturday" class="tab-pane fade {% if request.user.active_day == 'Cumartesi' %}
+																show active
+															{% endif %}">
+																	<h4 class="card-title d-flex justify-content-between">
+																		<span>Randevu Saatleriniz</span> 
+																		<a class="edit-link" data-toggle="modal" href="#add_time_slot"><i class="fa fa-edit mr-1"></i> Ekle ve Düzenle</a>
+																	</h4>
+																	<div class="doc-times">
+																		{% if saturdayExist == "true" %}
+																			{% for schedule in schedules %}						
+																				{% if schedule.day == "Cumartesi" %}
+																					<div class="doc-slot-list" {% if schedule.is_paid == "yes" %}
+																					style="background-color: gray;"
+																					{% endif %}>
+																						{{schedule.starting_time}} - {{schedule.finishing_time}}
+																						{% if schedule.is_paid == "no" %}
+																							<a href="{% url 'deleteTimeScheduleModel' schedule.pk %}" onclick="return confirm('Bu randevu zamanını silmek istediğinize emin misiniz?');" class="delete_schedule">
+																								<i class="fa fa-times"></i>
+																							</a>
+																						{% endif %}
+																						<br>
+																						{{schedule.date}}
+																					</div>
+																				{% endif %}										
+																			{% endfor %}
+																		{% else %}
+																		<p class="text-muted mb-0">Henüz ekli bir randevu saat aralığınız bulunmamaktadır.</p>
+																		{% endif %}
+																	</div>
+																</div>
+																<!-- /Saturday Slot -->
+
+															</div>
+															<!-- /Schedule Content -->
+															
+														</div>
+													</div>
+												</div>
+
+
+
+
+
+
+												<div class="row">
+
+													<div class="col-lg-4" style="visibility: hidden">
+														<div class="form-group">               
+															<label>Seans Süresi</label>
+															<select onchange="assign()" class="select form-control"  name="duration" id="selectinput">
+																<option value="0" selected="selected">-</option>
+																<option value="15">15 dk</option>
+																<option value="30">30 dk</option>  
+																<option value="45">45 dk</option>
+																<option value="60">60 dk</option>
+															</select>
+														</div>
+													</div>
+
+												</div>  
+
+
+
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							
+
+							
+
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+
+
+<!-- Footer -->
+<footer class="footer">
+				
+	<!-- Footer Top -->
+	<div class="footer-top">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-3 col-md-6">
+				
+					<!-- Footer Widget -->
+					<div class="footer-widget footer-about">
+						<div class="footer-logo">
+							<img src="{{logo.footerLogo.url}}" alt="logo">
+						</div>
+						<div class="footer-about-content">
+							<p>{{footer.aciklamaYazisi|safe}}</p>
+							<div class="social-icon">
+								<ul>
+									<li>
+										<a href="{{footer.facebook}}" target="_blank"><i class="fab fa-facebook-f"></i> </a>
+									</li>
+									<li>
+										<a href="{{footer.twitter}}" target="_blank"><i class="fab fa-twitter"></i> </a>
+									</li>
+									<li>
+										<a href="{{footer.linkedin}}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+									</li>
+									<li>
+										<a href="{{footer.instagram}}" target="_blank"><i class="fab fa-instagram"></i></a>
+									</li>
+									<!-- <li>
+										<a href="{{footer.facebook}}" target="_blank"><i class="fab fa-dribbble"></i> </a>
+									</li> -->
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Footer Widget -->
+					
+				</div>
+				
+				<div class="col-lg-3 col-md-6">
+				
+					<!-- Footer Widget -->
+					<div class="footer-widget footer-menu">
+						<h2 class="footer-title">Danışan İçin</h2>
+						<ul>
+							<li><a target="_blank" href="{% url 'showAllDoctors' %}"><i class="fas fa-angle-double-right"></i> Doktor Ara</a></li>
+							<li><a target="_blank" href="{% url 'login' %}"><i class="fas fa-angle-double-right"></i> Giriş</a></li>
+							<li><a target="_blank" href="{% url 'register_patient' %}"><i class="fas fa-angle-double-right"></i> Kayıt</a></li>
+							<li><a target="_blank" href="{% url 'showAllDoctors' %}"><i class="fas fa-angle-double-right"></i> Randevu Al</a></li>
+							<li><a target="_blank" href="{% if request.user.is_authenticated and request.user.is_patient %}
+								{% url 'patientDashboard' %}
+							{% else %}
+							{% url 'login' %}
+							{% endif %}"><i class="fas fa-angle-double-right"></i> Danışan Menüsü</a></li>
+						</ul>
+					</div>
+					<!-- /Footer Widget -->
+					
+				</div>
+				
+				<div class="col-lg-3 col-md-6">
+				
+					<!-- Footer Widget -->
+					<div class="footer-widget footer-menu">
+						<h2 class="footer-title">Doktorlar İçin</h2>
+						<ul>
+							<li><a href="
+							{% if request.user.is_authenticated and request.user.is_doctor %}
+								{% url 'doctorAppoitments' %}
+							{% else %}
+							{% url 'login' %}
+							{% endif %}
+								"><i class="fas fa-angle-double-right"></i> Randevular</a></li>
+							<li><a href="{% if request.user.is_authenticated and request.user.is_doctor %}
+								{% url 'indexChat' %}
+							{% else %}
+								{% url 'login' %}
+							{% endif %}"><i class="fas fa-angle-double-right"></i> Sohbet</a></li>
+							<li><a target="_blank" href="{% url 'login' %}"><i class="fas fa-angle-double-right"></i> Giriş</a></li>
+							<li><a target="_blank" href="{% url 'register_doctor' %}"><i class="fas fa-angle-double-right"></i> Kayıt</a></li>
+							<li><a target="_blank" href="
+							{% if request.user.is_doctor %}
+								{% url 'doctorDashboard' %}
+							{% else %}
+								{% url 'login' %}
+							{% endif %}
+								"><i class="fas fa-angle-double-right"></i> Doktor Menüsü</a></li>
+						</ul>
+					</div>
+					<!-- /Footer Widget -->
+					
+				</div>
+				
+				<div class="col-lg-3 col-md-6">
+				
+					<!-- Footer Widget -->
+					<div class="footer-widget footer-contact">
+						<h2 class="footer-title">İletişim</h2>
+						<div class="footer-contact-info">
+							<div class="footer-address">
+								<span><i class="fas fa-map-marker-alt"></i></span>
+								<p> {{footer.address}}</p>
+							</div>
+							<p>
+								<i class="fas fa-phone-alt"></i>
+								{{footer.phone}}
+							</p>
+							<p class="mb-0">
+								<i class="fas fa-envelope"></i>
+								{{footer.email}}
+							</p>
+						</div>
+					</div>
+					<!-- /Footer Widget -->
+					
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<!-- /Footer Top -->
+	
+	<!-- Footer Bottom -->
+	<div class="footer-bottom">
+		<div class="container-fluid">
+		
+			<!-- Copyright -->
+			<div class="copyright">
+				<div class="row">
+					<div class="col-md-6 col-lg-6">
+						<!-- <div class="copyright-text">
+							<p class="mb-0"><a href="templateshub.net">Templates Hub</a></p>
+						</div> -->
+					</div>
+					<div class="col-md-6 col-lg-6">
+					
+						<!-- Copyright Menu -->
+						<div class="copyright-menu">
+							<ul class="policy-menu">
+								<li><a href="{% url 'showAciklamaYazisi' %}">Hakkımızda</a></li>
+								<li><a href="{% url 'gizlilikPolitikasi' %}">Gizlilik Politikası</a></li>
+							</ul>
+						</div>
+						<!-- /Copyright Menu -->
+						
+					</div>
+				</div>
+			</div>
+			<!-- /Copyright -->
+			
+		</div>
+	</div>
+	<!-- /Footer Bottom -->
+	
+</footer>
+<!-- /Footer -->
+		   
+		</div>
+		<!-- /Main Wrapper -->
+		
+
+
+
+
+
+
+	
+		
+
+
+			<form action="{% url 'schedule' %}" method="post">
+				{% csrf_token %}
+
+			
+					<input type="hidden"  name="day" id="dayinput" value="">
+					<input type="hidden"  name="duration" id="durationinput" value="">
+			
+				
+				<script>
+					  
+					function saveDay(day) {
+					
+						$.ajax({
+							type : "POST",
+							url : 'change_active_day/'+day,			
+							dataType: 'JSON',								
+							data : {
+								'csrfmiddlewaretoken' : "{{  csrf_token  }}",								
+								'day' : day,
+								
+							},
+							success : function(data) {
+								
+                				
+								objectss=data.timeModels;
+								
+								
+								$("#jsonid").html("<p>"+"</p>")
+								//$("#bakalım").html("<p>"+data[1].day+"</p>");
+								for(var i=0;i<objectss.length;i++){
+									var isDisabled="";
+									var trashDiv='<div class="col-12 col-md-2"><label class="d-md-block d-sm-none d-none">&nbsp;</label><a href="#" class="btn btn-danger trash"><i class="far fa-trash-alt"></i></a></div>';
+									if(objectss[i].is_paid=="yes"){
+										isDisabled="disabled";
+										trashDiv='';
+									}
+									
+									$("#jsonid").append("<div class='row form-row hours-cont'>"+
+													"<div class='col-12 col-md-10'>"+
+														"<div class='row form-row'>"+
+															"<div class='col-12 col-md-6'>"+
+																"<div class='form-group'>"+
+																	"<label>Başlangıç</label>"+
+																	"<input "+isDisabled+ " type='time' name='starting_time' value='"+objectss[i].starting_time+"' class='form-control'>"+
+																"</div>"+
+															"</div>"+
+															"<div class='col-12 col-md-6'>"+
+																"<div class='form-group'>"+
+																	"<label>Bitiş</label>"+
+																	"<input "+isDisabled+" type='time' name='finishing_time' value='"+objectss[i].finishing_time+"' class='form-control'>"+
+																"</div>"+
+															"</div>"+
+														"</div>"+
+													"</div>"+
+													 trashDiv+
+												"</div>");   
+								}   
+								if(objectss.length == 0)   {
+									$("#jsonid").append("<div class='row form-row hours-cont'>"+
+													"<div class='col-12 col-md-10'>"+
+														"<div class='row form-row'>"+
+															"<div class='col-12 col-md-6'>"+
+																"<div class='form-group'>"+
+																	"<label>Başlangıç</label>"+
+																	"<input  type='time' name='starting_time' class='form-control'>"+
+																"</div>"+
+															"</div>"+
+															"<div class='col-12 col-md-6'>"+
+																"<div class='form-group'>"+
+																	"<label>Bitiş</label>"+
+																	"<input  type='time' name='finishing_time'  class='form-control'>"+
+																"</div>"+
+															"</div>"+
+														"</div>"+
+													"</div>"+
+													'<div class="col-12 col-md-2"><label class="d-md-block d-sm-none d-none">&nbsp;</label><a href="#" class="btn btn-danger trash"><i class="far fa-trash-alt"></i></a></div>' +
+												"</div>");   
+								   
+								}
+							}
+							
+						});
+						
+						
+
+					   // set the hidden input's query type value
+					   $('#dayinput').val(day);
+						
+					   // submit the form.
+					   // $('#post_form').submit();
+					//    $.get("change_active_day/" + day);
+					 	}
+
+						 window.onload = function() {
+							saveDay("{{ request.user.active_day }}");
+							changeColor();
+						}
+
+						
+					   //  $('#dayinput').change( function() {  
+					   // 		alert('Change!'); 
+					   // 	})
+
+					   function assign(){
+						$('#durationinput').val(document.getElementById("selectinput").value);
+					   }
+
+					//    var curr = new Date; // get current date
+					// 		var first = curr.getDate() - curr.getDay()+1; // First day is the day of the month - the day of the week
+					// 		var last = first + 6; // last day is the first day + 6
+
+					// 		var firstday = new Date(curr.setDate(first)).toUTCString();
+					// 		var lastday = new Date(curr.setDate(last)).toUTCString();
+
+					// 		console.log(firstday);
+					// 		console.log(lastday);
+
+					function changeColor(){
+						// var url_string = window.location.href
+						// var url = new URL(url_string);
+						// var week = url.searchParams.get("week");
+						// if(week=="this"){
+						// 	document.getElementById("thisWeek").style.backgroundColor="grey";
+						// 	document.getElementById("nextWeek").style.backgroundColor="orange";
+						// 	document.getElementById("whichWeek").textContent="Bu hafta";						}
+						// else if(week=="next"){
+						// 	document.getElementById("nextWeek").style.backgroundColor="grey";
+						// 	document.getElementById("thisWeek").style.backgroundColor="orange";
+						// 	document.getElementById("whichWeek").textContent="Gelecek hafta";			
+						// }
+						
+					}
+				
+
+
+			   </script>
+
+
+		<!-- Add Time Slos Modal -->
+		<div class="modal fade custom-modal" id="add_time_slot">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Randevu Saati Ekle</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">				
+							<div class="hours-info">
+
+											<div id="jsonid">
+												<!-- <div class="row form-row hours-cont">
+													<div class="col-12 col-md-10">
+														<div class="row form-row">
+															<div class="col-12 col-md-6">
+																<div class="form-group">
+																	<label>Başlangıç</label>
+																	<input  type="time" name="starting_time" value="{{ schedule.starting_time}}" class="form-control">
+																</div> 
+															</div>
+															<div class="col-12 col-md-6">
+																<div class="form-group">
+																	<label>Bitiş</label>
+																	<input  type="time" name="finishing_time" value="{{ schedule.finishing_time}}" class="form-control">
+																</div> 
+															</div>
+														</div>
+													</div>
+												</div> -->
+											</div>
+										
+
+							</div>
+							
+							<div class="add-more mb-3">
+								<a href="javascript:void(0);" class="add-hours"><i class="fa fa-plus-circle"></i> Daha Fazla Ekle</a>
+							</div>
+							<div class="submit-section text-center">
+								<button type="submit" class="btn btn-primary submit-btn">Değişiklikleri Kaydet</button>
+							</div>
+					
+
+					
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Add Time Slot Modal -->
+
+
+
+
+
+
+		
+		<!-- Edit Time Slot Modal -->
+		<div class="modal fade custom-modal" id="edit_time_slot">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Edit Time Slot</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+
+
+						<div class="hours-info">
+								
+							<div class="row form-row hours-cont">
+								<div class="col-12 col-md-10">
+									<div class="row form-row">
+										<div class="col-12 col-md-6">
+											<div class="form-group">
+												<label>Başlangıç</label>
+												<input  type="time" name="starting_time"  class="form-control">
+											</div> 
+										</div>
+										<div class="col-12 col-md-6">
+											<div class="form-group">
+												<label>Bitiş</label>
+												<input  type="time" name="finishing_time" class="form-control">
+											</div> 
+										</div>
+									</div>
+								</div>
+							</div>
+								
+								
+						</div>
+							
+							<div class="add-more mb-3">
+								<a href="javascript:void(0);" class="add-hours"><i class="fa fa-plus-circle"></i> Add More</a>
+							</div>
+							<div class="submit-section text-center">
+								<button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+							</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Edit Time Slot Modal -->
+
+	</form>
+	  
+		<!-- jQuery -->
+		<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script src="{% static 'assets/js/popper.min.js' %}"></script>
+		<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+		
+		<!-- Sticky Sidebar JS -->
+        <script src="{% static 'assets/plugins/theia-sticky-sidebar/ResizeSensor.js' %}"></script>
+        <script src="{% static 'assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js' %}"></script>
+		
+		<!-- Select2 JS -->
+		<script src="{% static 'assets/plugins/select2/js/select2.min.js' %}"></script>
+		
+		<!-- Custom JS -->
+		<script src="{% static 'assets/js/script.js' %}"></script>
+		
+	</body>
+
+
+
+</html>

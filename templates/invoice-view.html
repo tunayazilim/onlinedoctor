@@ -1,0 +1,175 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+	
+
+	
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index-2.html">Anasayfa</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Fatura Detayı</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Fatura Detayı</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-lg-8 offset-lg-2">
+							<div class="invoice-content">
+								<div class="invoice-item">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="invoice-logo">
+												<img src="{{logo.anaLogo.url}}" alt="logo">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<p class="invoice-details">
+												<strong>Randevu Id:</strong> #INV-{{schedule.pk}} <br>
+												<strong>Tarih:</strong> {{schedule.date}}
+											</p>
+										</div>
+									</div>
+								</div>
+								
+								<!-- Invoice Item -->
+								<div class="invoice-item">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="invoice-info">
+												<strong class="customer-text">Doktor Bilgileri </strong>
+												<p class="invoice-details invoice-details-two">
+													{{schedule.doctor.get_doctor_name}} <br>
+													{{schedule.doctor.address}},<br>
+													{{schedule.doctor.city}}, {{schedule.doctor.state}} <br>
+												</p>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="invoice-info invoice-info2">
+												<strong class="customer-text">Danışan Bilgileri</strong>
+												<p class="invoice-details">
+													{{schedule.patient.get_full_name}} <br>
+													{{schedule.patient.address}} , <br>
+													{{schedule.patient.city}} , {{schedule.patient.state}} <br>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /Invoice Item -->
+								
+								<!-- Invoice Item -->
+								<!-- <div class="invoice-item">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="invoice-info">
+												<strong class="customer-text">Ödeme Yöntemi</strong>
+												<p class="invoice-details invoice-details-two">
+													Kredi Kartı <br>
+													XXXXXXXXXXXX-2541 <br>
+													HDFC Bank<br>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div> -->
+								<!-- /Invoice Item -->
+								
+								<!-- Invoice Item -->
+								<div class="invoice-item invoice-table-wrap">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="table-responsive">
+												<table class="invoice-table table table-bordered">
+													<thead>
+														<tr>
+															<th>Açıklama</th>
+															<th class="text-center">Adet</th>
+															<th class="text-center">KDV</th>
+															<th class="text-right">Toplam</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>Randevu Görüşmesi ({{schedule.starting_time}}-{{schedule.finishing_time}})</td>
+															<td class="text-center">1</td>
+															<td class="text-center">12%</td>
+															<td class="text-right">
+															{% if schedule.money %}
+																{{schedule.money}}₺
+															{% else %}
+																0₺
+															{% endif %}
+																</td>
+														</tr>
+														
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="col-md-6 col-xl-4 ml-auto">
+											<div class="table-responsive">
+												<table class="invoice-table-two table">
+													<tbody>
+													<tr>
+														<th>Toplam:</th>
+														<td><span>{% if schedule.money %}
+															{{schedule.money}}₺
+														{% else %}
+															0₺
+														{% endif %}</span></td>
+													</tr>
+													<tr>
+														<th>İndirim Oranı:</th>
+														<td><span>-0%</span></td>
+													</tr>
+													<tr>
+														<th>Toplam Miktar:</th>
+														<td><span>{% if schedule.money %}
+															{{schedule.money}}₺
+														{% else %}
+															0₺
+														{% endif %}</span></td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /Invoice Item -->
+								
+								<!-- Invoice Information -->
+								<div class="other-info">
+									<h4>Diğer Bilgilendirmeler</h4>
+									<p class="text-muted mb-0">Bu fatura elektronik ortamda sistemimiz tarafından otomatik olarak oluşturulmuştur.</p>
+								</div>
+								<!-- /Invoice Information -->
+								
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			{% endblock content %}

@@ -1,0 +1,168 @@
+{% extends 'baseAdmin.html' %}
+
+
+
+
+
+{% block content %}
+
+
+
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="row">
+        <div class="col">
+            <h3 class="page-title">Menü Ekle</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'indexAdmin' %}">Anasayfa</a></li>
+                <li class="breadcrumb-item active">Menü Ekle</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- /Page Header -->
+
+
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+
+    {% if message.tags == "error" %}
+    <div class="alert alert-danger" role="alert">
+
+        <center><strong>{{message}}</strong></center>
+    </div>
+    {% else %}
+    <div class="alert alert-success" role="alert">
+
+        <center><strong>{{message}}</strong></center>
+    </div>
+    {% endif %}
+
+
+
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">
+                    {% if type == "hasta" %}
+                    Hastalar için
+                    {% elif type == "doktor" %}
+                    Doktorlar için
+                    {% elif type == "nouser" %}
+                    Giriş Yapmayan Kullanıcılar için
+                    {% endif %}
+
+                    {% if menu == "ust-menu" %}
+                    Üst Menü Ekle
+                    {% elif menu == "alt-menu" %}
+                    Alt Menü Ekle
+                    {% endif %}
+
+                </h4>
+            </div>
+            <div class="card-body">
+                <form action="{% url 'patientMenuAdminEkle' %}" method="POST">
+                    {% csrf_token %}
+
+
+
+                    {% if menu == "alt-menu" %}
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Üst Menü Seç</label>
+                        <div class="col-md-10">
+                            <select class="form-control" name="topMenu">
+
+                                {% if ustMenuler %}
+
+                                {% for ustMenu in ustMenuler %}
+                                <option 
+                                {% if ustMenu.pk == obj.topMenu.pk %}
+                                    selected
+                                {% endif %}
+                                     value="{{ustMenu.pk}}">{{ustMenu.name}}</option>
+                                {% endfor %}
+
+                                {% endif %}
+
+
+
+                            </select>
+
+                        </div>
+
+                    </div>
+                    {% endif %}
+
+
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Menü ismi</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" 
+                            {% if obj %}
+                                value="{{obj.name}}"
+                            {% endif %}
+                                 name="name" id="">
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Url</label>
+                        <div class="col-md-10">
+                            <input type="text" {% if obj %}
+                            value="{{obj.url}}"
+                        {% endif %} class="form-control" name="url" id="">
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Sıra</label>
+                        <div class="col-md-10">
+                            <input type="number"
+                             {% if obj %}
+                                value="{{obj.menuSira}}"
+                            {% endif %} 
+                             class="form-control" name="menuSira" id="">
+                        </div>
+
+                    </div>
+
+                    <input type="hidden" class="form-control" name="userType" value="{{type}}" id="">
+                    <input type="hidden" class="form-control" name="menuType" value="{{menu}}" id="">
+                    
+                    {% if obj %}
+                        <input type="hidden" class="form-control" name="objPk" value="{{obj.pk}}" id="">
+                    {% endif %}
+                        
+
+
+
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+{% endblock content %}

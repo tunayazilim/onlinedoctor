@@ -1,0 +1,156 @@
+
+
+
+{% extends 'baseAdmin.html' %}
+
+
+
+{% block content %}
+<input type="hidden" id="reviewId" name="asd" value="a">
+	
+	
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">Yorumlar</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Anasayfa</a></li>
+									<li class="breadcrumb-item active">Yorumlar</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+					{% if not reviews %}
+						<p style="color: red;">Henüz yorum bulunmamaktadır</p>
+					{% endif %}
+						
+
+
+
+
+					{% if messages %}
+					<ul class="messages">
+						{% for message in messages %}
+			
+						{% if message.tags == "error" %}
+						<div class="alert alert-danger" role="alert">
+			
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% else %}
+						<div class="alert alert-success" role="alert">
+			
+							<center><strong>{{message}}</strong></center>
+						</div>
+						{% endif %}
+			
+			
+			
+						{% endfor %}    
+					</ul>
+					{% endif %}
+
+
+					
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="datatable table table-hover table-center mb-0">
+											<thead>
+												<tr>
+													<th>Hasta Adı</th>
+													<th>Doktor Adı</th>
+													<th>Yıldız</th>
+													<th>Yorum</th>
+													<th>Tarih</th>
+													<th class="text-right">İşlemler</th>
+												</tr>
+											</thead>
+											<tbody>
+
+											
+											
+												
+												
+												{% if reviews %}
+													{% for review in reviews %}
+														<tr>
+															<td>
+																<h2 class="table-avatar">
+																	<a href="{% url 'showDoctorAdmin' review.comment_user.slug %}" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{review.comment_user.image.url}}" alt="User Image"></a>
+																	<a href="{% url 'showDoctorAdmin' review.comment_user.slug %}">{{review.comment_user.get_full_name}} </a>
+																</h2>
+															</td>
+															<td>
+																<h2 class="table-avatar">
+																	<a href="{% url 'showDoctorAdmin' review.doctor.slug %}" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{review.doctor.image.url}}" alt="User Image"></a>
+																	<a href="{% url 'showDoctorAdmin' review.doctor.slug %}">{{review.doctor.get_doctor_name}}</a>
+																</h2>
+															</td>
+															
+															<td>
+																{% if review.star != 0 %}
+																	{% for i in review.star|rjust:review.star %}	
+																	<i class="fe fe-star text-warning"></i>
+																	{% endfor %}
+																{% endif %}
+																{% if review.none_star != 0 %}
+																	{% for i in review.none_star|rjust:review.none_star %}	
+																	<i class="fe fe-star-o text-secondary"></i>
+																	{% endfor %} 
+																{% endif %}
+																
+															</td>
+															
+															<td>
+																{{review.comment}}  
+															</td>
+																<td>{{review.created_date.date}}  <br><small>{{review.created_date.time}}</small></td>
+															<td class="text-right">
+																<div class="actions">
+																	<a class="btn btn-sm bg-danger-light" onclick="assignId('{{ review.id }}')" id="#" data-toggle="modal" href="#delete_modal">
+																		<i class="fe fe-trash"></i> Sil
+																	</a>	
+																	
+																</div>
+															</td>
+														</tr>
+													{% endfor %}
+												{% endif %}
+
+												
+
+												<script>
+
+													function assignId(id){
+														var hid=document.getElementById("reviewId");
+														hid.value=id;
+													}
+
+													function deleteReview(){							
+	
+														var pk=document.getElementById("reviewId").value;
+														document.location.href="deleteReview/"+pk;
+														
+													}
+
+
+												</script>
+													
+												
+												
+											
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>			
+					</div>
+					
+	{% endblock content %}

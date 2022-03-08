@@ -1,0 +1,214 @@
+{% extends 'baseAdmin.html' %}
+
+
+
+
+
+{% block content %}
+
+
+
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="row">
+        <div class="col">
+            <h3 class="page-title">Menü Ayarları</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'indexAdmin' %}">Anasayfa</a></li>
+                <li class="breadcrumb-item active">Menü Ayarları</li>
+            </ul>
+        </div>
+        <div class="col-sm-5 col">
+            <a href="menu-ekle-admin?tip={{type}}&menu=alt-menu" class="btn btn-primary float-right mt-2">Alt Menü
+                Ekle</a>&nbsp;
+            <a href="menu-ekle-admin?tip={{type}}&menu=ust-menu" class="btn btn-primary float-right mt-2 mr-3">Üst Menü
+                Ekle</a>
+        </div>
+
+    </div>
+</div>
+<!-- /Page Header -->
+
+
+
+
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+
+    {% if message.tags == "error" %}
+    <div class="alert alert-danger" role="alert">
+
+        <center><strong>{{message}}</strong></center>
+    </div>
+    {% else %}
+    <div class="alert alert-success" role="alert">
+
+        <center><strong>{{message}}</strong></center>
+    </div>
+    {% endif %}
+
+
+
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">{{sendType}} Mevcut Menüleri</h4>
+                <!-- <p>
+										This is the most basic example of the datatables with zero configuration. Use the <code>.datatable</code> class to initialize datatables.
+									</p> -->
+
+            </div>
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="datatable table table-stripped">
+                        <thead>
+                            <tr>
+                                <th>Menü İsmi</th>
+                                <th>Sıra</th>
+                                <!-- <th>Alt Menüler</th> -->
+                                <th>Üst Menü</th>
+                                <th>Url</th>
+                                <th>Menü Tipi</th>
+
+                                <th class="text-right">İşlemler</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+
+                            {% if menuler %}
+                            {% for menu in menuler %}
+
+
+                            <tr>
+                                <td>{{menu.name}}</td>
+                                <td>{{menu.menuSira}}</td>
+                                <!-- <td style="font-size: 14px;">
+                                    {% if menu.has_bottom_menu %}
+
+                                    {% for altMenu in menu.get_bottom_menuler %}
+                                    {{altMenu}},
+                                    {% endfor %}
+
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td> -->
+                                <td>
+                                    -
+                                </td>
+                                <td>{{menu.url}}</td>
+                                <td>{{menu.menuType}}&nbsp;<span style="content: '\2191'; color: green; font-weight: bold;">&#8593;</span></td>
+
+                                <td class="text-right">
+                                    <div class="actions">
+                                        <a class="btn btn-sm bg-warning-light" 
+                                        {% if menu.menuType == "Üst Menü" %}
+                                            href="/nedmin/menu-ekle-admin?tip={{type}}&menu=ust-menu&pk={{menu.pk}}" 
+                                        {% elif menu.menuType == "Alt Menü" %}
+                                            href="/nedmin/menu-ekle-admin?tip={{type}}&menu=alt-menu&pk={{menu.pk}}"
+                                        {% endif %}>
+                                            
+                                            <i class="fe fe-pencil"></i> Düzenle
+                                        </a>
+                                        <a onclick="return confirm('Bu menüyü silmek istediğinizden emin misiniz?');"
+                                            class="btn btn-sm bg-danger-light"
+                                            href="{% url 'deleteMenu' pk=menu.pk str=menu.menuType %}">
+                                            <i class="fe fe-trash"></i> {{menu.menuType}}yü Sil
+                                        </a>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+
+                            {% if menu.has_bottom_menu %}
+                                
+                            
+                            {% for altMenu in menu.get_bottom_menuler %}
+                                <tr>
+                                    <td>{{altMenu.name}}</td>
+                                    <td>{{altMenu.menuSira}}</td>
+                                    <!-- <td style="font-size: 14px;">
+                                        -
+                                    </td> -->
+                                    <td>
+                                        {{altMenu.topMenu.name}}
+                                    </td>
+                                    <td>{{altMenu.url}}</td>
+                                    <td>{{altMenu.menuType}}</td>
+    
+                                    <td class="text-right">
+                                        <div class="actions">
+                                            <a class="btn btn-sm bg-warning-light" 
+                                            href="/nedmin/menu-ekle-admin?tip={{type}}&menu=alt-menu&pk={{altMenu.pk}}">
+                                                
+                                                <i class="fe fe-pencil"></i> Düzenle
+                                            </a>
+                                            <a onclick="return confirm('Bu menüyü silmek istediğinizden emin misiniz?');"
+                                                class="btn btn-sm bg-danger-light"
+                                                href="{% url 'deleteMenu' pk=altMenu.pk str=altMenu.menuType %}">
+                                                <i class="fe fe-trash"></i> {{altMenu.menuType}}yü Sil
+                                            </a>
+                                        </div>
+                                    </td>
+    
+                                </tr>
+                            {% endfor %}
+                                
+
+
+
+                            {% endif %}
+
+
+                            {% endfor %}
+
+                            {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}

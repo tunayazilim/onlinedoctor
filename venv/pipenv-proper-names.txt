@@ -1,0 +1,6 @@
+Automat
+Django
+Pillow
+PyJWT
+pyOpenSSL
+Twisted

@@ -1,0 +1,64 @@
+{% load static %}
+
+
+<!-- jQuery -->
+<script src="{% static 'assetsAdmin/js/jquery-3.2.1.min.js' %}"></script>
+		
+<!-- Bootstrap Core JS -->
+<script src="{% static 'assetsAdmin/js/popper.min.js' %}"></script>
+<script src="{% static 'assetsAdmin/js/bootstrap.min.js' %}"></script>
+
+<!-- Datatables JS -->
+<script src="{% static 'assetsAdmin/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assetsAdmin/plugins/datatables/datatables.min.js' %}"></script>
+
+<!-- Slimscroll JS -->
+<script src="{% static 'assetsAdmin/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+<script src="{% static 'assetsAdmin/plugins/raphael/raphael.min.js' %}"></script>    
+<script src="{% static 'assetsAdmin/plugins/morris/morris.min.js' %}"></script>  
+<script src="{% static 'assetsAdmin/js/chart.morris.js' %}"></script>
+
+<!-- Custom JS -->
+<script  src="{% static 'assetsAdmin/js/script.js' %}"></script>
+
+
+
+
+ <!-- tel input -->
+
+ <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+
+	 
+
+ <script>
+       $('#phone').inputmask("(599) 999-9999");
+                 
+     function toggleText(pk){	
+         var y =document.getElementsByName("hideform")
+         for (var i = 0; i < y.length; i++) {
+             if (y[i].style.display === "block") {
+                 if(y[i].id != pk)
+                     y[i].style.display = "none";
+                     
+             }
+         }
+     
+         var x = document.getElementById(pk);		
+         if (x.style.display === "none") {
+             x.style.display = "block";
+             
+         } else {
+             x.style.display = "none";
+             
+         }
+     
+     }
+
+
+     // function ajaxCalling(pk){
+
+     // }
+
+
+     </script>

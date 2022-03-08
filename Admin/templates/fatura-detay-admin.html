@@ -1,0 +1,125 @@
+
+
+		{% extends 'baseAdmin.html' %}
+
+		{% load static %}
+		{% block content %}
+			
+	
+			
+				
+					<!-- Invoice Container -->
+					<div class="invoice-container">
+						
+						<div class="row">
+							<div class="col-sm-6 m-b-20">
+								<img alt="Logo" class="inv-logo img-fluid" src="{{logo.anaLogo.url}}">
+							</div>
+							<div class="col-sm-6 m-b-20">
+								<div class="invoice-details">
+									<h3 class="text-uppercase">Fatura No: #INV-{{fatura.pk}}</h3>
+									<ul class="list-unstyled mb-0">
+										<li>Tarih: <span>{{fatura.date}}</span></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="row">
+							<div class="col-sm-12 m-b-20">
+								<ul class="list-unstyled mb-0">
+									<li>Doccure Hospital</li>
+									<li>3864 Quiet Valley Lane,</li>
+									<li>Sherman Oaks, CA, 91403</li>
+									<li>GST No:</li>
+								</ul>
+							</div>
+						</div> -->
+						<div class="row">
+							<div class="col-sm-6 col-lg-7 col-xl-8 m-b-20">
+								<h6>Doktor Bilgileri</h6>
+								<ul class="list-unstyled mb-0">
+									<li><h5 class="mb-0"><strong>{{fatura.doctor.get_doctor_name}}</strong></h5></li>
+									<li>{{fatura.doctor.address}}</li>
+									<li>{{fatura.doctor.phone_number}}</li>
+									<li><a href="#">{{fatura.doctor.email}}</a></li>
+								</ul>
+							</div>
+							<div class="col-sm-6 col-lg-5 col-xl-4 m-b-20">
+								<h6>Hasta Bilgileri</h6>
+								<ul class="list-unstyled invoice-payment-details mb-0">
+									<li><h5 class="mb-0"><strong>{{fatura.patient.get_doctor_name}}</strong></h5></li>
+									<li>{{fatura.patient.address}}</li>
+									<li>{{fatura.patient.phone_number}}</li>
+									<li><a href="#">{{fatura.patient.email}}</a></li>
+								</ul>
+							</div>
+						</div>
+						
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Ürün</th>
+										<th class="d-none d-sm-table-cell">Açıklama</th>
+										<th class="text-nowrap">Birim Fiyat</th>
+										<th>Adet</th>
+										<th>Toplam</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>1</td>
+										<td>Online Görüşme Sistemi</td>
+										<td class="d-none d-sm-table-cell">Randevu Görüşmesi ({{fatura.starting_time}}-{{fatura.finishing_time}})</td>
+										<td>{{fatura.money}} ₺</td>
+										<td>1</td>
+										<td>{{fatura.money}} ₺</td>
+									</tr>
+									
+									
+									
+									
+								</tbody>
+							</table>
+						</div>
+						
+						<div>
+							<div class="row invoice-payment">
+								<div class="col-sm-7">
+								</div>
+								<div class="col-sm-5">
+									<div class="m-b-20">
+										<!-- <h6>Total due</h6> -->
+										<div class="table-responsive no-border">
+											<table class="table mb-0">
+												<tbody>
+													<tr>
+														<th>Ara Toplam:</th>
+														<td class="text-right">$250</td>
+													</tr>
+													<tr>
+														<th>İndirim: <span class="text-regular">(0%)</span></th>
+														<td class="text-right">0 ₺</td>
+													</tr>
+													<tr>
+														<th>Toplam:</th>
+														<td class="text-right text-primary"><h5>{{fatura.money}} ₺</h5></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="invoice-info">
+								<h5>Diğer Bilgiler</h5>
+								<p class="text-muted mb-0">Bu fatura elektronik ortamda sistemimiz tarafından otomatik olarak oluşturulmuştur.</p>
+							</div>
+						</div>
+						
+					</div>
+					<!-- /Invoice Container -->
+					
+			
+					{% endblock content %}

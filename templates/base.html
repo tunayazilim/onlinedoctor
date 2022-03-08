@@ -1,0 +1,113 @@
+{% load static %}
+
+
+{% load logolar %}
+{% logolars as logo %}
+
+
+<!DOCTYPE html> 
+<html lang="en">
+	
+
+
+<head>
+
+	
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		
+		{% block title %}
+			
+		{% endblock title %}
+
+		
+		{% block description %}
+			
+		{% endblock description %}
+
+		
+		{% block keywords %}
+			
+		{% endblock keywords %}
+			
+			
+		
+		
+		<!-- Favicons -->
+		<link type="image/x-icon" href="{% static 'assets/img/favicon.png' %}" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/fontawesome.min.css' %}">
+		<link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+		<!-- Datetimepicker CSS -->
+		<link rel="stylesheet" href="{% static 'assets/css/bootstrap-datetimepicker.min.css' %}">
+
+		<!-- Select2 CSS -->
+		<link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
+
+		<!-- Fancybox CSS -->
+		<link rel="stylesheet" href="{% static 'assets/plugins/fancybox/jquery.fancybox.min.css' %}">
+
+		<!-- Dropzone JS -->	
+		<link rel="stylesheet" href="{% static 'assets/plugins/dropzone/dropzone.min.css' %}">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css' %}">
+		
+
+		<!-- telefon inputu için -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+				
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+
+		<!-- recaptcha -->
+		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+		
+		{% block scriptsAdd %}
+			
+		{% endblock scriptsAdd %}
+			
+
+
+
+	
+	</head>
+	<body id="bodyClass" class="{% block body_class %}{% endblock %}">
+	
+		
+
+	
+		<div class="main-wrapper">
+		
+
+
+
+
+
+			{% include 'header.html' %}
+
+
+
+
+            
+            {% block content %}
+                
+            {% endblock content %}
+                
+
+
+
+			{% include 'footer.html' %}
+

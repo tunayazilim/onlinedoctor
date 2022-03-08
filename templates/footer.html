@@ -1,0 +1,421 @@
+{% load static %}
+			
+
+{% load footer_part %}
+{% footerPart as footer %}
+
+			<!-- Footer -->
+			<footer class="footer">
+				
+				<!-- Footer Top -->
+				<div class="footer-top">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-about">
+									<div class="footer-logo">
+										<img src="{{logo.footerLogo.url}}" alt="logo">
+									</div>
+									<div class="footer-about-content">
+										<p>{{footer.aciklamaYazisi|safe}}</p>
+										<div class="social-icon">
+											<ul>
+												<li>
+													<a href="{{footer.facebook}}" target="_blank"><i class="fab fa-facebook-f"></i> </a>
+												</li>
+												<li>
+													<a href="{{footer.twitter}}" target="_blank"><i class="fab fa-twitter"></i> </a>
+												</li>
+												<li>
+													<a href="{{footer.linkedin}}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+												</li>
+												<li>
+													<a href="{{footer.instagram}}" target="_blank"><i class="fab fa-instagram"></i></a>
+												</li>
+												<!-- <li>
+													<a href="{{footer.facebook}}" target="_blank"><i class="fab fa-dribbble"></i> </a>
+												</li> -->
+											</ul>
+										</div>
+									</div>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">Danışan İçin</h2>
+									<ul>
+										<li><a target="_blank" href="{% url 'showAllDoctors' %}"><i class="fas fa-angle-double-right"></i> Doktor Ara</a></li>
+										<li><a target="_blank" href="{% url 'login' %}"><i class="fas fa-angle-double-right"></i> Giriş</a></li>
+										<li><a target="_blank" href="{% url 'register_patient' %}"><i class="fas fa-angle-double-right"></i> Kayıt</a></li>
+										<li><a target="_blank" href="{% url 'showAllDoctors' %}"><i class="fas fa-angle-double-right"></i> Randevu Al</a></li>
+										<li><a target="_blank" href="{% if request.user.is_authenticated and request.user.is_patient %}
+											{% url 'patientDashboard' %}
+										{% else %}
+										{% url 'login' %}
+										{% endif %}"><i class="fas fa-angle-double-right"></i> Danışan Menüsü</a></li>
+									</ul>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">Doktorlar İçin</h2>
+									<ul>
+										<li><a href="
+										{% if request.user.is_authenticated and request.user.is_doctor %}
+											{% url 'doctorAppoitments' %}
+										{% else %}
+										{% url 'login' %}
+										{% endif %}
+											"><i class="fas fa-angle-double-right"></i> Randevular</a></li>
+										<li><a href="{% if request.user.is_authenticated and request.user.is_doctor %}
+											{% url 'indexChat' %}
+										{% else %}
+											{% url 'login' %}
+										{% endif %}"><i class="fas fa-angle-double-right"></i> Sohbet</a></li>
+										<li><a target="_blank" href="{% url 'login' %}"><i class="fas fa-angle-double-right"></i> Giriş</a></li>
+										<li><a target="_blank" href="{% url 'register_doctor' %}"><i class="fas fa-angle-double-right"></i> Kayıt</a></li>
+										<li><a target="_blank" href="
+										{% if request.user.is_doctor %}
+											{% url 'doctorDashboard' %}
+										{% else %}
+											{% url 'login' %}
+										{% endif %}
+											"><i class="fas fa-angle-double-right"></i> Doktor Menüsü</a></li>
+									</ul>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-contact">
+									<h2 class="footer-title">İletişim</h2>
+									<div class="footer-contact-info">
+										<div class="footer-address">
+											<span><i class="fas fa-map-marker-alt"></i></span>
+											<p> {{footer.address}}</p>
+										</div>
+										<p>
+											<i class="fas fa-phone-alt"></i>
+											{{footer.phone}}
+										</p>
+										<p class="mb-0">
+											<i class="fas fa-envelope"></i>
+											{{footer.email}}
+										</p>
+									</div>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- /Footer Top -->
+				
+				<!-- Footer Bottom -->
+                <div class="footer-bottom">
+					<div class="container-fluid">
+					
+						<!-- Copyright -->
+						<div class="copyright">
+							<div class="row">
+								<div class="col-md-6 col-lg-6">
+									<!-- <div class="copyright-text">
+										<p class="mb-0"><a href="templateshub.net">Templates Hub</a></p>
+									</div> -->
+								</div>
+								<div class="col-md-6 col-lg-6">
+								
+									<!-- Copyright Menu -->
+									<div class="copyright-menu">
+										<ul class="policy-menu">
+											<li><a href="{% url 'showAciklamaYazisi' %}">Hakkımızda</a></li>
+											<li><a href="{% url 'gizlilikPolitikasi' %}">Gizlilik Politikası</a></li>
+										</ul>
+									</div>
+									<!-- /Copyright Menu -->
+									
+								</div>
+							</div>
+						</div>
+						<!-- /Copyright -->
+						
+					</div>
+				</div>
+				<!-- /Footer Bottom -->
+				
+			</footer>
+			<!-- /Footer -->
+		   
+	   </div>
+	   <!-- /Main Wrapper -->
+
+
+		   
+
+
+	   
+	   {% if chatMessageFooter %}
+		   
+		<!-- Voice Call Modal -->
+		<div class="modal fade call-modal" id="voice_call">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+					
+						<!-- Outgoing Call -->
+						<div class="call-box incoming-box">
+							<div class="call-wrapper">
+								<div class="call-inner">
+									<div class="call-user">
+										<img alt="User Image" src="{{other_user.image.url}}" class="call-avatar">
+										<h4 id="comingRequestName"></h4>
+										<span>Sizi arıyor...</span>
+									</div>							
+									<div class="call-items">
+										<a onclick="sendRejectCall();" id="comingRequestRed" class="btn call-item call-end" data-dismiss="modal" aria-label="Close"><i class="material-icons">call_end</i></a>
+										<a onclick="answer();" id="comingRequestYellow" class="btn call-item call-start"><i class="material-icons">call</i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Outgoing Call -->
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Voice Call Modal -->
+
+
+
+		
+		<!-- Video Call Modal -->
+		<div class="modal fade call-modal" id="video_call">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+					
+						<!-- Outgoing Call -->
+						<div class="call-box incoming-box">
+							<div class="call-wrapper">
+								<div class="call-inner">
+									<div class="call-user">
+										<img class="call-avatar" id="other_user_image" src="{{other_user.image.url}}" alt="User Image">
+										<h4 id="nameContent">
+										<!-- {% if other_user.is_doctor %}
+										{{other_user.unvan}}. {{other_user.get_full_name}}
+										{% elif other_user.is_patient %}	
+										{{other_user.get_full_name}}
+										{% endif %} -->
+											</h4>
+										<!-- <span>Görüntülü aramayı gerçekleştirmek istiyor musunuz?</span> -->
+										<span>Aranıyor...</span>
+									</div>							
+									<div class="call-items">
+										<a href="javascript:void(0);" class="btn call-item call-end" id="endCallButton" data-dismiss="modal" aria-label="Close"><i class="material-icons">call_end</i></a>
+										<!-- <a onclick="videoCallUser();" href="#" class="btn call-item call-start"><i class="material-icons">videocam</i></a> -->
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Outgoing Call -->
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Video Call Modal -->
+
+
+
+
+
+
+
+	
+		
+		<!-- ben ekledim chat için -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.16/peer.min.js"></script>
+		<script src="{% static 'assets/js/app.js' %}"></script>
+		
+		
+		{% elif videoCall %}
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.16/peer.min.js"></script>
+	
+		
+	   {% endif %}
+		   
+
+	   
+	   {% if appoitmentsDoctor %}
+	  
+		   	<!-- Appointment Details Modal -->
+		<div class="modal fade custom-modal" id="appt_details">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Randevu Detayları</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<ul class="info-details">
+							<li>
+								<div class="details-header">
+									<div class="row">
+										<div class="col-md-6">
+											<span id="randevuPk" class="title">#APT0001</span>
+											<!-- <span id="randevuDate" class="text">21 Oct 2019 10:00 AM</span> -->
+										</div>
+										<div class="col-md-6">
+											<div class="text-right">
+												<button type="button" id="randevuStatusButton" class="btn bg-success-light btn-sm" id="topup_status">Completed</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<span class="title">Durum:</span>
+								<span id="randevuStatus" class="text">Completed</span>
+							</li>
+							<li>
+								<span class="title">Tarih</span>
+								<span id="randevuDate"  class="text">29 Jun 2019</span>
+							</li>
+							<li>
+								<span class="title">Ödenen Miktar</span>
+								<span id="randevuMoney" class="text">$450</span>
+							</li>
+							<li>
+								<span class="title">Görüşme Türü</span>
+								<span id="randevuMeetingType" class="text">$450</span>
+								<span id="randevuMeetingAddress" class="text">$450</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Appointment Details Modal -->
+		
+
+
+		<!-- randevu detayi için JS -->
+		<script src="{% static 'assets/js/invoices.js' %}"></script>
+	   {% endif %}
+		   
+
+
+
+	  
+		<!-- jQuery -->
+		<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script src="{% static 'assets/js/popper.min.js' %}"></script>
+		<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+		
+		<!-- Slick JS -->
+		<script src="{% static 'assets/js/slick.js' %}"></script>
+		
+		<!-- Custom JS -->
+		<script src="{% static 'assets/js/script.js' %}"></script>
+
+			<!-- Sticky Sidebar JS -->
+		<script src="{% static 'assets/plugins/theia-sticky-sidebar/ResizeSensor.js' %}"></script>
+		<script src="{% static 'assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js' %}"></script>
+
+			
+			<!-- Select2 JS -->
+		<script src="{% static 'assets/plugins/select2/js/select2.min.js' %}"></script>
+			
+			<!-- Dropzone JS -->
+		<script src="{% static 'assets/plugins/dropzone/dropzone.min.js' %}"></script>
+		<script src="{% static 'assets/js/dropzoneSettings.js' %}"></script>
+		
+		<!-- Fancybox JS -->
+		<script src="{% static 'assets/plugins/fancybox/jquery.fancybox.min.js' %}"></script>
+			
+			<!-- Bootstrap Tagsinput JS -->
+		<script src="{% static 'assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.js' %}"></script>
+
+		 	<!-- Datetimepicker JS -->
+		<script src="{% static 'assets/js/moment.min.js' %}"></script>
+		<script src="{% static 'assets/js/bootstrap-datetimepicker.min.js' %}"></script>
+
+			
+			<!-- Profile Settings JS -->
+		<script src="{% static 'assets/js/profile-settings.js' %}"></script>
+
+		<!-- Circle Progress JS -->
+		<script src="{% static 'assets/js/circle-progress.min.js' %}"></script>
+
+		<!-- il ve ilçeler için -->
+		<script src="{% static 'assets/js/ilveilceler.js' %}"></script>
+
+	   <!-- Load comment button  -->
+		<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+		<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+		<script src="{% static 'js/infinite.min.js' %}"></script>
+
+	   	<!-- tel input -->
+
+		<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+
+	 
+
+		<script>
+			  $('#phone').inputmask("(599) 999-9999");
+						
+			function toggleText(pk){	
+				var y =document.getElementsByName("hideform")
+				for (var i = 0; i < y.length; i++) {
+					if (y[i].style.display === "block") {
+						if(y[i].id != pk)
+							y[i].style.display = "none";
+							
+					}
+				}
+			
+				var x = document.getElementById(pk);		
+				if (x.style.display === "none") {
+					x.style.display = "block";
+					
+				} else {
+					x.style.display = "none";
+					
+				}
+			
+			}
+
+
+			// function ajaxCalling(pk){
+
+			// }
+
+
+			</script>
+		
+	</body>
+
+<!-- doccure/  30 Nov 2019 04:11:53 GMT -->
+</html>

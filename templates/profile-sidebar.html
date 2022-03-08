@@ -1,0 +1,99 @@
+
+						<!-- Profile Sidebar -->
+						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+							<div class="profile-sidebar">
+								<div class="widget-profile pro-widget-content">
+									<div class="profile-info-widget">
+										<a href="#" class="booking-doc-img">
+											<img src="{{request.user.image.url}}" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3>{{request.user.get_full_name}}</h3>
+											<div class="patient-details">
+												<h5><i class="fas fa-birthday-cake"></i> 
+
+												{% if request.user.date_of_birth == None or request.user.date_of_birth == "" or request.user.date_of_birth == Null %}
+												Tarih berlirtilmemiş	
+												{% else %}
+												{{request.user.date_of_birth}}, {{request.user.calculate_age}} yaş
+												
+												{% endif %}
+													</h5>
+												<h5 class="mb-0"><i class="fas fa-map-marker-alt"></i> 
+												{% if request.user.address %}
+													{{request.user.city}}, {{request.user.state}}
+												{% else %}
+													<p>Konum belirtilmemiş</p>
+												{% endif %}
+													</h5>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="dashboard-widget">
+									<nav class="dashboard-menu">
+										<ul>
+											<li {% if which_active == "patientDashboard" %}
+											class="active"
+									   		{% endif %}>
+												<a href="{% url 'patientDashboard' %}">
+													<i class="fas fa-columns"></i>
+													<span>Anasayfam</span>
+												</a>
+											</li>
+											<li {% if which_active == "favourites" %}
+											class="active"
+									   		{% endif %}>
+												<a href="{% url 'showFavouritesOfPatients' %}">
+													<i class="fas fa-bookmark"></i>
+													<span>Favori Doktorlarım</span>
+												</a>
+											</li>
+											<li>
+												<a href="{% url 'indexChat' %}">
+													<i class="fas fa-comments"></i>
+													<span>Mesajlar</span>
+													<small class="unread-msg">23</small>
+												</a>
+											</li>
+											<li {% if which_active == "profile" %}
+											class="active"
+									   		{% endif %}>
+												<a href="{% url 'showUserProfileSettings' %}">
+													<i class="fas fa-user-cog"></i>
+													<span>Profil Ayarları</span>
+												</a>
+											</li>
+
+
+											<li {% if which_active == "iletisim" %}
+											class="active"
+									   		{% endif %}>
+												<a href="{% url 'patientIletisimSettings' %}">
+													<i class="fas fa-address-card"></i>
+													<span>İletişim Ayarları</span>
+												</a>
+											</li>
+
+
+											<li {% if which_active == "passwordchange" %}
+											class="active"
+									   		{% endif %}>
+												<a href="{% url 'changePasswordPatient' %}">
+													<i class="fas fa-lock"></i>
+													<span>Şifre Değiştir</span>
+												</a>
+											</li>
+											<li>
+												<a href="{% url 'logout' %}">
+													<i class="fas fa-sign-out-alt"></i>
+													<span>Çıkış</span>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+
+							</div>
+						</div>
+						<!-- /Profile Sidebar -->

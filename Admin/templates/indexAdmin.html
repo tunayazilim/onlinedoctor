@@ -1,0 +1,463 @@
+
+{% extends 'baseAdmin.html' %}
+
+
+
+
+{% block scriptsAdminAdd %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+{% endblock scriptsAdminAdd %}
+	
+
+
+
+{% block content %}
+	
+
+
+<!-- Page Header -->
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-12">
+			<h3 class="page-title">Admin Sayfasına Hoşgeldiniz</h3>
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item active">Anasayfa</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- /Page Header -->
+
+<div class="row">
+	<div class="col-xl-3 col-sm-6 col-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="dash-widget-header">
+					<span class="dash-widget-icon text-primary border-primary">
+						<i class="fe fe-users"></i>
+					</span>
+					<div class="dash-count">
+						<h3>{{doctors_count}}</h3>
+					</div>
+				</div>
+				<div class="dash-widget-info">
+					<h6 class="text-muted">Doktorlar</h6>
+					<div class="progress progress-sm">
+						<div class="progress-bar bg-primary w-50"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xl-3 col-sm-6 col-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="dash-widget-header">
+					<span class="dash-widget-icon text-success">
+						<i class="fe fe-credit-card"></i>
+					</span>
+					<div class="dash-count">
+						<h3>{{patients_count}}</h3>
+					</div>
+				</div>
+				<div class="dash-widget-info">
+					
+					<h6 class="text-muted">Hastalar</h6>
+					<div class="progress progress-sm">
+						<div class="progress-bar bg-success w-50"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xl-3 col-sm-6 col-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="dash-widget-header">
+					<span class="dash-widget-icon text-danger border-danger">
+						<i class="fe fe-money"></i>
+					</span>
+					<div class="dash-count">
+						<h3>{{totalMoney}} ₺</h3>
+					</div>
+				</div>
+				<div class="dash-widget-info">
+					
+					<h6 class="text-muted">Toplam Gelir</h6>
+					<div class="progress progress-sm">
+						<div class="progress-bar bg-danger w-50"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xl-3 col-sm-6 col-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="dash-widget-header">
+					<span class="dash-widget-icon text-warning border-warning">
+						<i class="fe fe-folder"></i>
+					</span>
+					<div class="dash-count">
+						<h3>{{appointmentsCount}}</h3>
+					</div>
+				</div>
+				<div class="dash-widget-info">
+					
+					<h6 class="text-muted">Randevular</h6>
+					<div class="progress progress-sm">
+						<div class="progress-bar bg-warning w-50"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<div class="row">
+	<div class="col-md-12 col-lg-6">
+	
+		<canvas id="myChart"  ></canvas><br>
+		<center><p>Toplam Doktor Kazançları: {{data.0}} ₺ &emsp;Toplam Şirket Kazancı: {{data.1}} ₺ &emsp;Diğer: {{data.2}} ₺</p></center>
+		
+	</div>
+	<div class="col-md-12 col-lg-6">
+	
+		<canvas id="myChartLastMonth" ></canvas><br>
+		<center><p> Bu Ayki Doktor Kazançları: {{lastMonthData.0}} ₺ &emsp;Bu Ayki Şirket Kazancı: {{lastMonthData.1}} ₺ &emsp;Diğer: {{lastMonthData.2}} ₺</p></center>
+		
+	</div>	
+</div>
+
+
+<!-- 
+<canvas id="myChart" width="500" height="100" ></canvas><br>
+<center><p>Toplam Doktor Kazançları: {{data.0}} ₺ &emsp;Toplam Şirket Kazancı: {{data.1}} ₺ &emsp;Diğer: {{data.2}} ₺</p></center><br><br>
+<canvas id="myChartLastMonth" width="500" height="100" ></canvas><br>
+<center><p> Bu Ayki Doktor Kazançları: {{lastMonthData.0}} ₺ &emsp;Bu Ayki Şirket Kazancı: {{lastMonthData.1}} ₺ &emsp;Diğer: {{lastMonthData.2}} ₺</p></center><br><br>
+
+<br> <br> -->
+
+
+
+
+
+
+
+<div class="row">
+	<div class="col-md-12 col-lg-6">
+	
+		<!-- Sales Chart -->
+		<div class="card card-chart">
+			<div class="card-header">
+				<h4 class="card-title">Gelir Tablosu</h4>
+			</div>
+			<div class="card-body">
+				<div id="morrisArea"></div>
+			</div>
+		</div>
+		<!-- /Sales Chart -->
+		
+	</div>
+	<div class="col-md-12 col-lg-6">
+	
+		<!-- Invoice Chart -->
+		<div class="card card-chart">
+			<div class="card-header">
+				<h4 class="card-title">Mevcut Durum</h4>
+			</div>
+			<div class="card-body">
+				<div id="morrisLine"></div>
+			</div>
+		</div>
+		<!-- /Invoice Chart -->
+		
+	</div>	
+</div>
+<div class="row">
+	<div class="col-md-6 d-flex">
+	
+		<!-- Recent Orders -->
+		<div class="card card-table flex-fill">
+			<div class="card-header">
+				<h4 class="card-title">Doktor Listesi</h4>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover table-center mb-0">
+						<thead>
+							<tr>
+								<th>Doktor Adı</th>
+								<th>Hizmetler</th>
+								<th>Aylık Kazanç</th>
+								<th>Yorumlar</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+							{% for doctor in doctors %}
+								<tr>
+									<td>
+										<h2 class="table-avatar">
+											<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{doctor.image.url}}" alt="User Image"></a>
+											<a href="profile.html">{{doctor.get_doctor_name}}</a>
+										</h2>
+									</td>
+									<td>{{doctor.services}}</td>
+									<td>$3200.00</td>
+									<td>
+										{% if doctor.average_star != 0 %}
+											{% for i in doctor.average_star|rjust:doctor.average_star %}	
+											<i class="fe fe-star text-warning"></i>
+											{% endfor %}
+										{% endif %}
+										{% if doctor.none_average_star != 0 %}
+											{% for i in doctor.none_average_star|rjust:doctor.none_average_star %}	
+											<i class="fe fe-star-o text-secondary"></i>
+											{% endfor %} 
+										{% endif %}
+										
+									</td>
+								</tr>
+							{% endfor %}
+								
+							
+							
+							
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- /Recent Orders -->
+		
+	</div>
+	<div class="col-md-6 d-flex">
+	
+		<!-- Feed Activity -->
+		<div class="card  card-table flex-fill">
+			<div class="card-header">
+				<h4 class="card-title">Hasta Listesi</h4>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover table-center mb-0">
+						<thead>
+							<tr>													
+								<th>Hasta Adı</th>
+								<th>Telefon</th>
+								<th>Son Randevu</th>
+								<th>Ödenen</th>													
+							</tr>
+						</thead>
+						<tbody>
+							
+							{% for patient in patients %}
+								<tr>
+									<td>
+										<h2 class="table-avatar">
+											<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{patient.image.url}}" alt="User Image"></a>
+											<a href="profile.html">{{patient.get_full_name}} </a>
+										</h2>
+									</td>
+									<td>{{patient.phone_number}}</td>
+									<td>20 Oct 2019</td>
+									<td class="text-right">$100.00</td>
+								</tr>
+							{% endfor %}
+								
+							
+						
+							
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- /Feed Activity -->
+		
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+	
+		<!-- Recent Orders -->
+		<div class="card card-table">
+			<div class="card-header">
+				<h4 class="card-title">Randevu Listesi</h4>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover table-center mb-0">
+						<thead>
+							<tr>
+								<th>Doktor Adı</th>
+								<th>Alanları</th>
+								<th>Hasta Adı</th>
+								<th>Randevu Zamanı</th>
+								<th>Durum</th>
+								<th class="text-right">Miktar</th>
+							</tr>
+						</thead>
+						<tbody>
+
+
+							
+							{% for schedule in schedules %}
+								<tr>
+									<td>
+										<h2 class="table-avatar">
+											<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{schedule.doctor.image.url}}" alt="User Image"></a>
+											<a href="profile.html">{{schedule.doctor.get_doctor_name}}</a>
+										</h2>
+									</td>
+									<td>{{schedule.doctor.services}}</td>
+									<td>
+										<h2 class="table-avatar">
+											<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{schedule.patient.image.url}}" alt="User Image"></a>
+											<a href="profile.html">{{schedule.patient.get_full_name}} </a>
+										</h2>
+									</td>
+									<td>{{schedule.date}}<span class="text-primary d-block">{{schedule.starting_time}}-{{schedule.finishing_time}}</span></td>
+									<td>
+										<div class="status-toggle">
+											<input type="checkbox" id="status_1" class="check" checked>
+											<label for="status_1" class="checktoggle">checkbox</label>
+										</div>
+									</td>
+									<td class="text-right">
+										{{schedule.money}}₺
+									</td>
+								</tr>
+							{% endfor %}
+								
+							
+							
+						
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- /Recent Orders -->
+		
+	</div>
+</div>
+
+
+
+{{ labels|json_script:"labelss" }}
+{{ data|json_script:"defaulData" }}
+{{ lastMonthData|json_script:"lastMonthData" }}
+
+<script>
+
+	var labelsa = JSON.parse(document.getElementById('labelss').textContent);
+	var defaulDataa = JSON.parse(document.getElementById('defaulData').textContent);
+	var lastMonthDataa = JSON.parse(document.getElementById('lastMonthData').textContent);
+	var labels=[];
+	var defaultData=[];
+	var lastMonthData=[];
+	for (let index = 0; index < labelsa.length; index++) {
+		const element = labelsa[index];
+		labels.push(element);
+		defaultData.push(defaulDataa[index]);
+		lastMonthData.push(lastMonthDataa[index]);
+	}
+
+
+
+
+	
+
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: '# of Votes',
+            data: defaultData,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+
+
+
+
+const ctxa = document.getElementById('myChartLastMonth').getContext('2d');
+const myCharta = new Chart(ctxa, {
+    type: 'doughnut',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: '# of Votes',
+            data: lastMonthData,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+
+</script>
+
+
+
+
+{% endblock content %}

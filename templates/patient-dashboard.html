@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+
+
+
+
+{% block content %}
+
+
+
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+	<div class="container-fluid">
+		<div class="row align-items-center">
+			<div class="col-md-12 col-12">
+				<nav aria-label="breadcrumb" class="page-breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="index-2.html">Anasayfa</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Kullanıcı Sayfası</li>
+					</ol>
+				</nav>
+				<h2 class="breadcrumb-title">Kullanıcı Sayfası</h2>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Breadcrumb -->
+
+<!-- Page Content -->
+<div class="content">
+	<div class="container-fluid">
+
+		<div class="row">
+
+
+			{% include 'profile-sidebar.html' %}
+
+
+			<div class="col-md-7 col-lg-8 col-xl-9">
+				<div class="card">
+					<div class="card-body pt-0">
+
+						<!-- Tab Menu -->
+						<nav class="user-tabs mb-4">
+							<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+								<li class="nav-item">
+									<a class="nav-link active" href="#pat_appointments"
+										data-toggle="tab">Randevularım</a>
+								</li>
+
+
+								<li class="nav-item">
+									<a class="nav-link" href="#pat_billing" data-toggle="tab">Faturalar</a>
+								</li>
+							</ul>
+						</nav>
+						<!-- /Tab Menu -->
+
+						<!-- Tab Content -->
+						<div class="tab-content pt-0">
+
+							<!-- Appointment Tab -->
+							<div id="pat_appointments" class="tab-pane fade show active">
+								<div class="card card-table mb-0">
+									<div class="card-body">
+										<div class="table-responsive">
+											<table class="table table-hover table-center mb-0">
+												<thead>
+													<tr>
+														<th>Doktor</th>
+														<th>Randevu Tarihi</th>
+
+														<th>Miktar</th>
+
+														<th>Durum</th>
+														<th></th>
+													</tr>
+												</thead>
+												<tbody>
+
+
+
+
+													{% if schedules %}
+													{% for schedule in schedules %}
+
+													<tr>
+														<td>
+															<h2 class="table-avatar">
+																<a href="{% url 'showDoctorProfile' schedule.doctor.slug %}"
+																	class="avatar avatar-sm mr-2">
+																	<img class="avatar-img rounded-circle"
+																		src="{{schedule.doctor.image.url}}"
+																		alt="User Image">
+																</a>
+																<a
+																	href="{% url 'showDoctorProfile' schedule.doctor.slug %}">{{schedule.doctor.get_doctor_name}}
+																	<span>{{schedule.doctor.specializations|truncatechars:30}}</span></a>
+															</h2>
+														</td>
+														<td>{{schedule.date}} <span
+																class="d-block text-info">{{schedule.starting_time}}-{{schedule.finishing_time}}</span>
+														</td>
+
+														<td>
+															{% if schedule.money %}
+															{{schedule.money}}₺
+															{% else %}
+															0₺
+															{% endif %}
+														</td>
+
+														<td>
+															<span class="badge badge-pill bg-warning-light">
+																Beklemede</span>
+														</td>
+														<td class="text-right">
+															<div class="table-action">
+																<a href="javascript:void(0);"
+																	class="btn btn-sm bg-primary-light">
+																	<i class="fas fa-print"></i> Bastır
+																</a>
+																<!-- <a href="javascript:void(0);"
+																	class="btn btn-sm bg-info-light">
+																	<i class="far fa-eye"></i> Görüntüle
+																</a> -->
+															</div>
+														</td>
+													</tr>
+													{% endfor %}
+													{% endif %}
+
+
+
+
+
+													{% if faturalar %}
+													{% for schedule in faturalar %}
+
+													<tr>
+														<td>
+															<h2 class="table-avatar">
+																<a href="{% url 'showDoctorProfile' schedule.doctor.slug %}"
+																	class="avatar avatar-sm mr-2">
+																	<img class="avatar-img rounded-circle"
+																		src="{{schedule.doctor.image.url}}"
+																		alt="User Image">
+																</a>
+																<a
+																	href="{% url 'showDoctorProfile' schedule.doctor.slug %}">{{schedule.doctor.get_doctor_name}}
+																	<span>{{schedule.doctor.specializations|truncatechars:30}}</span></a>
+															</h2>
+														</td>
+														<td>{{schedule.date}} <span
+																class="d-block text-info">{{schedule.starting_time}}-{{schedule.finishing_time}}</span>
+														</td>
+
+														<td>
+															{% if schedule.money %}
+															{{schedule.money}}₺
+															{% else %}
+															0₺
+															{% endif %}
+														</td>
+
+														<td>
+															<span class="badge badge-pill bg-success-light">
+																Onaylanmış</span>
+														</td>
+														<td class="text-right">
+															<div class="table-action">
+																<a href="javascript:void(0);"
+																	class="btn btn-sm bg-primary-light">
+																	<i class="fas fa-print"></i> Bastır
+																</a>
+																<a href="{% url 'invoicesView' schedule.pk %}"
+																	class="btn btn-sm bg-info-light">
+																	<i class="far fa-eye"></i> Görüntüle
+																</a>
+															</div>
+														</td>
+													</tr>
+													{% endfor %}
+													{% endif %}
+
+
+
+
+
+
+													{% if deletedAppointments %}
+													{% for schedule in deletedAppointments %}
+
+													<tr>
+														<td>
+															<h2 class="table-avatar">
+																<a href="{% url 'showDoctorProfile' schedule.doctor.slug %}"
+																	class="avatar avatar-sm mr-2">
+																	<img class="avatar-img rounded-circle"
+																		src="{{schedule.doctor.image.url}}"
+																		alt="User Image">
+																</a>
+																<a
+																	href="{% url 'showDoctorProfile' schedule.doctor.slug %}">{{schedule.doctor.get_doctor_name}}
+																	<span>{{schedule.doctor.specializations|truncatechars:30}}</span></a>
+															</h2>
+														</td>
+														<td>{{schedule.date}} <span
+																class="d-block text-info">{{schedule.starting_time}}-{{schedule.finishing_time}}</span>
+														</td>
+
+														<td>
+															{% if schedule.money %}
+															{{schedule.money}}₺
+															{% else %}
+															0₺
+															{% endif %}
+														</td>
+
+														<td>
+															<span class="badge badge-pill bg-danger-light">
+																Reddedilmiş</span>
+														</td>
+														<td class="text-right">
+															<div class="table-action">
+																<a href="javascript:void(0);"
+																	class="btn btn-sm bg-primary-light">
+																	<i class="fas fa-print"></i> Bastır
+																</a>
+																<!-- <a href="javascript:void(0);"
+																	class="btn btn-sm bg-info-light">
+																	<i class="far fa-eye"></i> Görüntüle
+																</a> -->
+															</div>
+														</td>
+													</tr>
+													{% endfor %}
+													{% endif %}
+
+
+
+
+
+
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /Appointment Tab -->
+
+
+
+
+
+							<!-- Billing Tab -->
+							<div id="pat_billing" class="tab-pane fade">
+								<div class="card card-table mb-0">
+									<div class="card-body">
+										<div class="table-responsive">
+											<table class="table table-hover table-center mb-0">
+												<thead>
+													<tr>
+														<th>Fatura No</th>
+														<th>Doktor</th>
+														<th>Miktar</th>
+														<th>Tarih</th>
+														<th></th>
+													</tr>
+												</thead>
+												<tbody>
+
+
+
+
+													{% for fatura in faturalar %}
+													<tr>
+														<td>
+															<a
+																href="{% url 'invoicesView' fatura.pk %}">#INV-{{fatura.pk}}</a>
+														</td>
+														<td>
+															<h2 class="table-avatar">
+																<a href="{% url 'showDoctorProfile' fatura.doctor.slug %}"
+																	class="avatar avatar-sm mr-2">
+																	<img class="avatar-img rounded-circle"
+																		src="{{fatura.doctor.image.url}}"
+																		alt="User Image">
+																</a>
+																<a
+																	href="{% url 'showDoctorProfile' fatura.doctor.slug %}">{{fatura.doctor.get_doctor_name}}
+																	<span>{{fatura.doctor.specializations|truncatechars:30}}</span></a>
+															</h2>
+														</td>
+														<td>
+															{% if fatura.money %}
+															{{fatura.money}}₺
+															{% else %}
+															0₺
+															{% endif %}
+														</td>
+														<td>{{fatura.date}}</td>
+														<td class="text-right">
+															<div class="table-action">
+																<a href="{% url 'invoicesView' fatura.pk %}"
+																	class="btn btn-sm bg-info-light">
+																	<i class="far fa-eye"></i> Görüntüle
+																</a>
+																<a href="javascript:void(0);"
+																	class="btn btn-sm bg-primary-light">
+																	<i class="fas fa-print"></i> Bastır
+																</a>
+															</div>
+														</td>
+													</tr>
+													{% endfor %}
+
+
+
+
+
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /Billing Tab -->
+
+						</div>
+						<!-- Tab Content -->
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<!-- /Page Content -->
+
+
+
+{% endblock content %}

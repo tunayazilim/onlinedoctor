@@ -1,0 +1,89 @@
+{% extends 'baseAdmin.html' %}
+			
+			
+			
+			{% block content %}
+				
+			
+				
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">Faturalar</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Anasayfa</a></li>
+									<li class="breadcrumb-item active">Faturalar</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="datatable table table-hover table-center mb-0">
+											<thead>
+												<tr>
+													<th>Fatura No</th>
+													<th>Doktor</th>
+													<th>Hasta</th>
+													<th>Miktar</th>
+													<th>Oluşturulma Tarihi</th>
+													<th class="text-center">Status</th>
+													
+												</tr>
+											</thead>
+											<tbody>
+
+
+												
+												{% for fatura in faturalar %}
+													<tr>
+														<td><a href="{% url 'viewInvoiceDetailAdmin' fatura.pk %}">#INV-{{fatura.pk}}</td>
+														
+														<td>
+															<h2 class="table-avatar">
+																<a href="{% url 'showDoctorAdmin' fatura.doctor.slug %}" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{fatura.doctor.image.url}}" alt="User Image"></a>
+																<a href="{% url 'showDoctorAdmin' fatura.doctor.slug %}">{{fatura.doctor.get_doctor_name}} </a>
+															</h2>
+														</td>
+
+														<td>
+															<h2 class="table-avatar">
+																<a href="{% url 'showDoctorAdmin' fatura.patient.slug %}" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{fatura.patient.image.url}}" alt="User Image"></a>
+																<a href="{% url 'showDoctorAdmin' fatura.patient.slug %}">{{fatura.patient.get_full_name}} </a>
+															</h2>
+														</td>
+														<td>{{fatura.money}} ₺</td>
+														<td>{{fatura.date}}</td>
+														<td class="text-center">
+															<span class="badge badge-pill bg-success inv-badge">Ödendi</span>
+														</td>
+														
+													</tr>
+												{% endfor %}
+													
+												
+												
+												
+												
+												
+												
+												
+												
+												
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>			
+					</div>
+					
+			
+					{% endblock content %}

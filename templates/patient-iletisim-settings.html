@@ -1,0 +1,127 @@
+
+			{% extends 'base.html' %}
+
+			
+			{% block content %}
+				
+			
+				
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Anasayfa</a></li>
+									<li class="breadcrumb-item active" aria-current="page">İletişim Ayarları</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">İletişim Ayarları</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+
+
+                        
+                        {% if request.user.is_patient %}
+                            {% include 'profile-sidebar.html' %}
+                        {% else %}
+                            <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+
+                                {% include 'doctor-profile-sidebar.html' %}		
+                            </div>
+                        {% endif %}
+                            
+
+					
+
+
+						
+						<div class="col-md-7 col-lg-8 col-xl-9">
+							<div class="card">
+								<div class="card-body">
+									
+									<!-- Profile Settings Form -->
+									<form action="{% url 'patientIletisimSettings' %}" method="POST">
+										{% csrf_token %}
+
+
+										{% if messages %}
+								<ul class="messages">
+									{% for message in messages %}
+						
+									{% if message.tags == "error" %}
+									<div class="alert alert-danger" role="alert">
+										
+										
+										<center><strong>{{message}}</strong></center>
+									</div>
+									{% else %}
+									<div class="alert alert-success" role="alert">
+						
+										<center><strong>{{message}}</strong></center>
+									</div>
+									{% endif %}
+						
+						
+						
+									{% endfor %}
+								</ul>
+								{% endif %}
+
+
+								{% if form.errors %}
+								{% for field in form %}
+								{% for error in field.errors %}
+								<div class="alert alert-danger">
+									<center><strong>{{ error|escape }}</strong></center>
+								</div>
+								{% endfor %}
+								{% endfor %}
+								{% for error in form.non_field_errors %}
+								<div class="alert alert-danger">
+									<center><strong>{{ error|escape }}</strong></center>
+								</div>
+								{% endfor %}
+						
+								{% endif %}
+
+
+
+										<div class="row form-row">
+											{% for field in form.visible_fields %}
+											<div class="col-12 col-md-8">
+												<div class="form-group">
+													{{ field.label_tag }}<span class="text-danger"></span>
+												
+													{{ field }}
+												</div>
+											</div>		
+											{% endfor %}    
+
+										</div>
+
+										<div class="submit-section">
+											<button type="submit" class="btn btn-primary submit-btn">Değişiklikleri Kaydet</button>
+										</div>
+									</form>
+									<!-- /Profile Settings Form -->
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			{% endblock content %}

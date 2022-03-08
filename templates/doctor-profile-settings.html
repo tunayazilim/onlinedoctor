@@ -1,0 +1,592 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+	{{ request.user.cityCode|json_script:"cityOfUser" }}
+	{{ request.user.state|json_script:"stateOfUser" }}
+	{{ whichPageforCity|json_script:"whichPageforCity" }}
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index-2.html">Anasayfa</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Profil Ayarları</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Profil Ayarları</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+
+								{% include 'doctor-profile-sidebar.html' %}		
+						</div>
+					
+
+						<div class="col-md-7 col-lg-8 col-xl-9">
+
+
+							{% if messages %}
+							<ul class="messages">
+								{% for message in messages %}
+					
+								{% if  'error' in message.tags and "doctorsettings" in message.extra_tags  %}
+								<div class="alert alert-danger" role="alert">
+					
+									<center><strong>{{message}}</strong></center>
+								</div>
+								{% elif 'success' in message.tags and "doctorsettings" in message.extra_tags  %}
+								<div class="alert alert-success" role="alert">
+					
+									<center><strong>{{message}}</strong></center>
+								</div>
+								{% endif %}
+					
+					
+					
+								{% endfor %}
+							</ul>
+							{% endif %}
+
+
+
+								<!-- Clinic Info -->
+								<div class="card">
+									<div class="card-body">
+										<h4 class="card-title">Klinik Bilgileri</h4>
+										<div class="row form-row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Klinik Adı</label>
+													<input type="text" id="clinic_name" name="clinic_name" value="{{request.user.clinic_name}}" class="form-control">
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Klinik Adresi</label>
+													<input type="text" id="clinic_address" name="clinic_address" value="{{request.user.clinic_address}}" class="form-control">
+												</div>
+											</div>
+											<div class="col-md-12">
+												<div class="form-group">
+													<label>Klinik Fotoğrafları (En fazla 5 adet yükleme yapabilirsiniz.Fotoğraflar max 2 mb büyüklükte olmalıdır.Yükleme yaptıktan sonra en aşağıda bulunan kaydet butonuna basmanız gerekmektedir)</label>	
+													
+													<form action="{% url 'save_clinic_images' %}"  method="post" id="my-dropzone"  class="dropzone" enctype="multipart/form-data" >
+														{% csrf_token %}
+															<div class="fallback">
+																<input type="file" name="file" multiple>
+															</div>
+														
+													</form>
+													
+			
+												</div>
+												
+												<div class="upload-wrap">		
+													{% for clinic_image in clinic_images %}						
+														<div class="upload-images">
+															
+															<img src="{{clinic_image.clinic_image.url}}" alt="Upload Image">
+															<a href="{% url 'clinicImageDelete' clinic_image.pk %}" class="btn btn-icon btn-danger btn-sm"><i class="far fa-trash-alt"></i></a>
+															
+														</div>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+														{% endfor %}
+														
+												</div>
+												
+													
+												<!-- <div class="upload-img">
+													<div class="change-photo-btn">
+														<span><i class="fa fa-upload"></i> Fotoğraf Yükle</span>
+														<input type="file" class="upload" 
+														{% if clinic_images.count >= 5 %}
+															disabled
+															style="color:black;"
+														{% endif %}
+															 name="clinic_image">
+														
+													</div>
+													<small class="form-text text-muted">Fotoğraflar teker teker yüklenmektedir.</small>
+													
+												</div>	 -->
+			
+			
+											</div>
+										</div>
+									</div>
+								</div>
+						
+								<!-- /Clinic Info -->
+
+
+
+
+
+							
+							<form action="{% url 'showDoctorProfileSettings' %}" id="form1" method="POST" enctype="multipart/form-data">
+								{% csrf_token %}
+								<input type="hidden" id="clinic_name_hidden" name="clinic_name" value="{{request.user.clinic_name}}" class="form-control">
+								<input type="hidden" id="clinic_address_hidden" name="clinic_address" value="{{request.user.clinic_address}}" class="form-control">
+
+						
+							<!-- Basic Information -->
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Temel Bilgiler <br><br><p style="color: black; font-size: 13px;">(Yaptığınız her değişiklikten sonra en altta bulunan değişiklikleri kaydet butonuna basmanız gerekmektedir! )</p></h4>
+									<div class="row form-row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<div class="change-avatar">
+													<div class="profile-img">
+														<img src="{{request.user.image.url}}" alt="User Image">
+													</div>
+													<div class="upload-img">
+														<div class="change-photo-btn">
+															<span><i class="fa fa-upload"></i> Fotoğraf Yükle</span>
+															<input type="file" class="upload" value="{{request.user.image.url}}" name="imageavatar">
+														</div>
+														<small class="form-text text-muted"> <span class="text-danger">*</span> işareti olan yerler zorunludur</small>
+														<br><p style="font-size: 12px;">Lütfen daha iyi bir görüntü için fotoğraf boyutunuzun <span style="color: red; font-weight: bold;">300x300</span> boyutlarına yakın olmasına özen gösteriniz</p>
+													</div>
+												</div>
+											</div>
+										</div>
+
+
+										 <!-- <div class="col-md-6">
+											<div class="form-group">
+												<label>Username <span class="text-danger">*</span></label>
+												<input type="text" class="form-control">
+											</div>
+										</div> -->
+									
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>İsim <span class="text-danger">*</span></label>
+												<input type="text" class="form-control" required name="first_name" value="{{request.user.first_name}}">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Soyisim	 <span class="text-danger">*</span></label>
+												<input type="text" class="form-control" required name="last_name" value="{{request.user.last_name}}">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Unvan <span class="text-danger">*</span></label>
+												<input type="text" class="form-control" required name="unvan" value="{{request.user.unvan}}">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Uzmanlık Alanınız <span class="text-danger">*</span></label>
+												<input required type="text" class="form-control" name="define_profession" value="{{request.user.define_profession}}">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Telefon <span class="text-danger">*</span></label>
+												<input type="tel" id="phone" required class="form-control floating" name="phone_number" value="{{request.user.phone_number}}">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Cinsiyet</label>
+												<select required class="form-control select" name="gender">
+													{% if request.user.gender ==  "None" %}
+													<option 
+														
+														disabled 
+														value="None" >Belirtilmemiş</option>
+													{% endif %} 
+													
+													<option {% if request.user.gender ==  "male" %}
+													selected
+												{% endif %} value="male">Erkek</option>
+													<option {% if request.user.gender == "female" %}
+													selected
+												{% endif %} value="female">Kadın</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Mail <span class="text-danger">*</span></label>
+												<input type="email" class="form-control" required name="email" value="{{request.user.email}}">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group mb-0">
+												<label>Doğum Tarihi <span class="text-danger">*</span></label>
+												<input type="date" class="form-control" required name="date_of_birth" value="{{request.user.date_of_birth|date:'Y-m-d'}}"> 
+											</div>
+										</div> 
+
+
+
+									</div>
+								</div>
+							</div>
+							<!-- /Basic Information -->
+							
+							<!-- About Me -->
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Hakkımda <span class="text-danger">*</span></h4>
+									<div class="form-group mb-0">
+										<label>Biyografim</label>
+										<textarea class="form-control" required name="about" rows="5">{{request.user.about}}</textarea>
+									</div>
+								</div>
+							</div>
+							<!-- /About Me -->
+							
+						
+
+								<!-- klinik info buradaydı -->
+
+
+
+
+							<!-- Contact Details -->
+							<div class="card contact-card">
+								<div class="card-body">
+									<h4 class="card-title">İletişim Detayları</h4>
+									<div class="row form-row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="control-label">Ülke  <span class="text-danger">*</span></label>
+												<input type="text" required name="country" value="{{request.user.country}}" class="form-control">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>İl  <span class="text-danger">*</span></label>
+												<!-- <input type="text" required  name="city" value="{{request.user.city}}" class="form-control"> -->
+												<select name="cityCode" required class="form-control" id="Iller">
+													<option value="0">Lütfen Bir İl Seçiniz</option>
+												</select>
+											</div>
+											<input name="city" type="hidden" value="{{request.user.city}}" id="hiddenCityName">
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="control-label">İlçe  <span class="text-danger">*</span></label>
+												<!-- <input type="text" required name="state" value="{{request.user.state}}" class="form-control"> -->
+												<select name="state" required class="form-control" id="Ilceler" disabled="disabled">
+													<option value="0">Lütfen Önce bir İl seçiniz</option>
+												</select>
+											</div>
+										</div>
+			
+
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="control-label">Adres  <span class="text-danger">*</span></label>
+												<input type="text" required name="address" value="{{request.user.address}}" class="form-control">
+											</div>
+										</div>
+										
+										
+									</div>
+								</div>
+							</div>
+							<!-- /Contact Details -->
+							
+							<!-- Pricing -->
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Fiyatlandırma</h4>
+									
+									<div class="form-group mb-0">
+										<div id="pricing_select">
+											<div class="custom-control custom-radio custom-control-inline">
+												<input type="radio" id="price_free" name="rating_option" class="custom-control-input" value="price_free" 
+												{% if request.user.is_free %}
+													checked
+												{% endif %}
+													>
+												<label class="custom-control-label" for="price_free">Ücretsiz</label>
+											</div>
+											<div class="custom-control custom-radio custom-control-inline">
+												<input type="radio" id="price_custom" name="rating_option" value="custom_price" class="custom-control-input" {% if request.user.is_free == False %}
+												checked
+											{% endif %}>
+												<label class="custom-control-label" for="price_custom">Fiyat Belirle</label>
+											</div>
+										</div>
+
+									</div>	
+									
+									<div class="row custom_price_cont" id="custom_price_cont" 
+									{% if request.user.is_free %}
+										style="display: none;"
+									{% endif %}
+										>
+										<div class="col-md-2">
+											
+											<input type="number" class="form-control" id="custom_rating_input" name="appointment_minute" value="{{request.user.appointment_minute}}" placeholder="20">
+											<small class="form-text text-muted">Seans Süresi(Dakika)</small>
+										</div> dakika 
+										<p> &emsp;&emsp;</p>
+										<div class="col-md-2">
+											<input type="number" class="form-control" id="custom_rating_input" name="custom_rating_count" value="{{request.user.custom_price}}" placeholder="20">
+											<small class="form-text text-muted">Seans Ücreti</small>
+										</div> ₺
+									</div>
+									
+								</div>
+							</div>
+							<!-- /Pricing -->
+							
+							<!-- Services and Specialization -->
+							<div class="card services-card">
+								<div class="card-body">
+									<h4 class="card-title">Uzmanlık Alanlarınız</h4>
+									<!-- <div class="form-group">
+										<label>Hizmetler</label>
+										<input type="text" data-role="tagsinput" class="input-tags form-control" placeholder="Hizmet Giriniz" name="services" value="{{request.user.services}}" id="services">
+										<small class="form-text text-muted">Not : Yeni bir servis adı yazın & enter'a basın</small>
+									</div>  -->
+									<div class="form-group mb-0">
+										<label>Uzmanlık Alanları </label><br>
+										<input  class="input-tags form-control" type="text" data-role="tagsinput" placeholder="Uzmanlık Alanı Giriniz" name="specialist" value="{{request.user.specializations}}" id="specialist">
+										<small class="form-text text-muted"><p style="color: red; font-size: 14px !important;"> Not : Yeni bir uzmanlık alanı yazın & enter'a basın</p></small>
+									</div> 
+								</div>              
+							</div>
+							<!-- /Services and Specialization -->
+						 
+							<!-- Education -->
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Eğitimler</h4>
+									<div class="education-info">
+
+
+
+										
+										{% for education in educations %}
+											
+
+										<div class="row form-row education-cont">
+											<div class="col-12 col-md-10 col-lg-11">
+												<div class="row form-row">
+													<div class="col-12 col-md-6 col-lg-4">
+														<div class="form-group">
+															<label>Derece</label>
+															<input type="text" name="degree" value="{{education.degree}}" class="form-control">
+														</div> 
+													</div>
+													<div class="col-12 col-md-6 col-lg-4">
+														<div class="form-group">
+															<label>Okul/Üniversite</label>
+															<input type="text" name="college" value="{{education.college}}" class="form-control">
+														</div> 
+													</div>
+													<div class="col-12 col-md-6 col-lg-4">
+														<div class="form-group">
+															<label>Bitirme Yılı</label>
+															<input type="text" name="year_of_completion" value="{{education.year_of_completion}}" class="form-control">
+														</div> 
+													</div>
+												</div>
+											</div>
+											<div class="col-12 col-md-2 col-lg-1"><label class="d-md-block d-sm-none d-none">&nbsp;</label><a href="{% url 'deleteEducation' education.pk %}" class="btn btn-danger trash"><i class="far fa-trash-alt"></i></a></div>
+		
+										</div>
+
+										{% endfor %}
+											
+
+
+
+									</div>
+									<div class="add-more">
+										<a href="javascript:void(0);" class="add-education"><i class="fa fa-plus-circle"></i> Ekle</a>
+									</div>
+								</div>
+							</div>
+							<!-- /Education -->
+
+
+
+					<!-- Experience -->
+					<div class="card">
+						<div class="card-body">
+							<h4 class="card-title">Tecrübeler</h4>
+							<div class="experience-info">
+
+
+								
+								{% for experience in experiences %}
+								<div class="row form-row experience-cont">
+									<div class="col-12 col-md-5">
+										<div class="form-group">
+											<label>Hastane Adı</label>
+											<input type="text" name="hospital_name" value="{{experience.hospital_name}}" class="form-control">
+										</div> 
+									</div>
+									<div class="col-12 col-md-5">
+										<div class="form-group">
+											<label>
+												Çalışma Yılları</label>
+											<input type="text" name="time" value="{{experience.time}}" class="form-control">
+										</div> 
+									</div>
+									<div class="col-12 col-md-2">
+										<label class="d-md-block d-sm-none d-none">&nbsp;</label>
+										<a href="#" class="btn btn-danger trash"><i class="far fa-trash-alt"></i></a>
+									</div>
+								</div>
+								{% endfor %}
+									
+
+
+							</div>
+							<div class="add-more">
+								<a href="javascript:void(0);" class="add-experience"><i class="fa fa-plus-circle"></i> Ekle</a>
+							</div>
+						</div>
+					</div>
+					<!-- /Awards -->
+							
+							<!-- Awards -->
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Ödüller</h4>
+									<div class="awards-info">
+
+
+									
+									{% for award in awards %}
+											<div class="row form-row awards-cont">
+												<div class="col-12 col-md-5">
+													<div class="form-group">
+														<label>Ödüller</label>
+														<input type="text" name="award_name" value="{{award.award_name}}" class="form-control">
+													</div> 
+												</div>
+												<div class="col-12 col-md-5">
+													<div class="form-group">
+														<label>Yıl</label>
+														<input type="text" name="year" value="{{award.year}}" class="form-control">
+													</div> 
+												</div>
+												<div class="col-12 col-md-2">
+													<label class="d-md-block d-sm-none d-none">&nbsp;</label>
+													<a href="#" class="btn btn-danger trash"><i class="far fa-trash-alt"></i></a>
+												</div>
+											</div>
+									{% endfor %}
+										
+
+
+
+									</div>
+									<div class="add-more">
+										<a href="javascript:void(0);" class="add-award"><i class="fa fa-plus-circle"></i> Ekle</a>
+									</div>
+								</div>
+							</div>
+							<!-- /Awards -->
+							
+							<!-- Memberships -->
+							<!-- <div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Memberships</h4>
+									<div class="membership-info">
+										<div class="row form-row membership-cont">
+											<div class="col-12 col-md-10 col-lg-5">
+												<div class="form-group">
+													<label>Memberships</label>
+													<input type="text" class="form-control">
+												</div> 
+											</div>
+										</div>
+									</div>
+									<div class="add-more">
+										<a href="javascript:void(0);" class="add-membership"><i class="fa fa-plus-circle"></i> Add More</a>
+									</div>
+								</div>
+							</div> -->
+							<!-- /Memberships -->
+							
+							<!-- Registrations -->
+							<!-- <div class="card">
+								<div class="card-body">
+									<h4 class="card-title">Registrations</h4>
+									<div class="registrations-info">
+										<div class="row form-row reg-cont">
+											<div class="col-12 col-md-5">
+												<div class="form-group">
+													<label>Registrations</label>
+													<input type="text" class="form-control">
+												</div> 
+											</div>
+											<div class="col-12 col-md-5">
+												<div class="form-group">
+													<label>Year</label>
+													<input type="text" class="form-control">
+												</div> 
+											</div>
+										</div>
+									</div>
+									<div class="add-more">
+										<a href="javascript:void(0);" class="add-reg"><i class="fa fa-plus-circle"></i> Add More</a>
+									</div>
+								</div>
+							</div> -->
+							<!-- /Registrations -->
+							
+							<div class="submit-section submit-btn-bottom">
+								<button type="submit" onclick="assignHiddenInputs();" class="btn btn-primary submit-btn">Değişiklikleri Kaydet</button>
+							</div>
+							
+				
+					</form>
+					
+
+					
+					
+
+				</div>
+
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+			<script>
+
+				function assignHiddenInputs(){
+					console.log(document.getElementById("clinic_name").value);
+					document.getElementById("clinic_name_hidden").value=document.getElementById("clinic_name").value;
+					document.getElementById("clinic_address_hidden").value=document.getElementById("clinic_address").value;
+				}
+
+				
+
+			</script>
+   
+			{% endblock content %}
+
+
+			

@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+	
+	
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index-2.html">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Appointments</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Appointments</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">						
+							{% include 'doctor-profile-sidebar.html' %}		
+						</div>
+
+                        <div class="col-md-7 col-lg-8 col-xl-9">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row form-row">
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Ad Soyad&emsp;</label>
+												<input type="text" class="form-control" value="{{comment.comment_user.get_full_name}}" readonly>
+                                        </div>
+                                    </div>
+
+									<div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Tarih&emsp;</label>
+												<input type="text" class="form-control" value="{{comment.created_date}}" readonly>
+                                        </div>
+                                    </div>
+
+									<div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Yorum&emsp;</label>
+											<textarea class="form-control" readonly cols="30" rows="7">{{comment.comment}}</textarea>
+												
+                                        </div>
+                                    </div>
+									
+
+									{% if comment.is_parent %}
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Yıldız&emsp;</label>
+												<div class="review-count rating">{% if comment.star != 0 %}
+													{% for i in comment.star|rjust:comment.star %}	
+														<i class="fas fa-star filled"></i>
+													{% endfor %}
+												{% endif %}
+											{% if comment.none_star != 0 %}
+												{% for i in comment.none_star|rjust:comment.none_star %}	
+													<i class="fas fa-star"></i>
+												{% endfor %} 
+											{% endif %}</div>
+											</div>
+										</div>
+									{% else %}
+									<div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Yanıt verilen yorum&emsp;</label>
+											<textarea class="form-control" readonly cols="30" rows="7">{{comment.parent.comment}}</textarea>
+												
+                                        </div>
+                                    </div>
+									{% endif %}
+									
+
+
+									<div class="col-md-4">
+                                        <div class="form-group">
+											<a href="{% url 'acceptWaitingComment' comment.pk %}" class="btn btn-sm bg-success-light">
+												<i class="fas fa-check"></i> Kabul Et
+											</a>
+											<a onclick="return confirm('Bu yorumu silmek istediğinizden emin misiniz?');" href="{% url 'deleteWaitingComment' comment.pk %}" class="btn btn-sm bg-danger-light">
+												<i class="fas fa-times"></i> Sil
+											</a>
+										</div>
+									</div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+						
+						
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			
+{% endblock content %}

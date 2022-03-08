@@ -1,0 +1,168 @@
+
+{% load static %}
+
+
+{% load countOfWaitingComments %}
+{% count_of_waiting_comments as countWaitingComments %}
+
+
+
+{% load countOfWaitingAppointments %}
+{% count_of_waiting_appointments request as countWaitingAppointments %}
+
+
+
+						
+							<!-- Profile Sidebar -->
+							<div class="profile-sidebar">
+								<div class="widget-profile pro-widget-content">
+									<div class="profile-info-widget">
+										<a href="#" class="booking-doc-img">
+											<img 
+											{% if request.user.image %}
+												src="{{request.user.image.url}}"
+												{% else %}
+												src="{% static 'no-avatar.png' %}"
+											{% endif %}
+												 alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3>{{request.user.unvan}} {{request.user.get_full_name}}</h3>
+											
+											<div class="patient-details">
+												<h5 class="mb-0">{{request.user.define_profession}}</h5>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="dashboard-widget">
+									<nav class="dashboard-menu">
+										<ul>
+											<li {% if which_active == "doctorDashboard" %}
+											class="active"
+									   {% endif %}>
+												<a href="{% url 'doctorDashboard' %}">
+													<i class="fas fa-columns"></i>
+													<span>Anasayfa 
+													{% if countWaitingAppointments != 0 %}
+													<small class="unread-msg">{{countWaitingAppointments}}</small>
+													{% endif %}
+														</span>
+												</a>
+											</li>
+											<li {% if which_active == "appoitments" %}
+											class="active"
+									   {% endif %}>
+												<a href="{% url 'doctorAppoitments' %}">
+													<i class="fas fa-calendar-check"></i>
+													<span>Randevu İstekleri</span>
+													
+													{% if countWaitingAppointments %}
+													<small class="unread-msg">{{countWaitingAppointments}}</small>
+													{% endif %}
+														
+													
+												</a>
+											</li>
+											<li {% if which_active == "patients" %}
+											class="active"
+									   {% endif %}>
+												<a href="{% url 'doctorPatients' %}">
+													<i class="fas fa-user-injured"></i>
+													<span>Danışanlarım</span>
+												</a>
+											</li>
+											<li {% if which_active == "timeSchedule" %}
+											class="active"
+									   {% endif %}>
+												<a href="{% url 'schedule' %}">
+													<i class="fas fa-hourglass-start"></i>
+													<span>Randevu Saat Ayarları</span>
+												</a>
+											</li>
+											<li {% if which_active == "invoices" %}
+											class="active"
+									   {% endif %}>
+												<a href="{% url 'doctorInvoices' %}">
+													<i class="fas fa-file-invoice"></i>
+													<span>Faturalar</span>
+												</a>
+											</li>
+											<li {% if which_active == "allComments" %}
+											class="active"
+									   {% endif %}>
+												<a href="{% url 'listCommentsAdmin' %}">
+													<i class="fas fa-star"></i>
+													<span>Yorumlar</span>
+												</a>
+											</li>
+											<li {% if which_active == "waitingComments" %}
+											class="active"
+									   {% endif %}>
+												<a href="{% url 'listWaitingComments' %}">
+													<i class="fas fa-comment"></i>
+													<span>Yorum İstekleriniz</span>
+													
+													{% if countWaitingComments %}
+														<small class="unread-msg">{{countWaitingComments}}</small>
+													{% endif %}
+														
+												</a>
+											</li>
+											<li>
+												<a href="{% url 'indexChat' %}">
+													<i class="fas fa-comments"></i>
+													<span>Mesajlar</span>
+													<small class="unread-msg">23</small>
+												</a>
+											</li>
+											<li 
+											{% if which_active == "profile" %}
+											     class="active"
+											{% endif %}
+												>
+												<a href="{% url 'showDoctorProfileSettings' %}">
+													<i class="fas fa-user-cog"></i>
+													<span>Profil Ayarları</span>
+												</a>
+											</li>
+
+
+											<li {% if which_active == "iletisim" %}
+											class="active"
+									   		{% endif %}>
+												<a href="{% url 'patientIletisimSettings' %}">
+													<i class="fas fa-address-card"></i>
+													<span>İletişim Ayarları</span>
+												</a>
+											</li>
+
+
+
+											<li {% if which_active == "socialmedia" %}
+											class="active"
+									   		{% endif %}>
+												<a href="{% url 'updateSocialMediaDoctor' %}">
+													<i class="fas fa-share-alt"></i>
+													<span>Sosyal Medya</span>
+												</a>
+											</li>
+											<li {% if which_active == "passwordchange" %}
+											class="active"
+									   		{% endif %}>
+												<a href="{% url 'changePasswordDoctor' %}">
+													<i class="fas fa-lock"></i>
+													<span>Şifre Değiştir</span>
+												</a>
+											</li>
+											<li>
+												<a href="{% url 'logout' %}">
+													<i class="fas fa-sign-out-alt"></i>
+													<span>Çıkış Yap</span>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+							<!-- /Profile Sidebar -->

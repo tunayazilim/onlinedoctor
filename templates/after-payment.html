@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-12 col-12">
+                <nav aria-label="breadcrumb" class="page-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Anasayfa</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Randevu Ayarlama</li>
+                    </ol>
+                </nav>
+                <h2 class="breadcrumb-title">Randevu Ayarlama</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Breadcrumb -->
+
+<!-- Page Content -->
+<div class="content success-page-cont">
+    <div class="container-fluid">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+
+
+                {% if success %}
+                <!-- Success Card -->
+                <div class="card success-card">
+                    <div class="card-body">
+                        <div class="success-cont">
+                            <i class="fas fa-check"></i>
+                            <h3>Randevunuz başarıyla oluşturuldu.Doktorunuzun onay durumuna göre daha sonradan mail yoluyla bildirileceksiniz.Teşekkür ederiz.</h3>
+                            <p>Randevunuz <strong>{{schedule.doctor.unvan}} {{schedule.doctor.get_full_name}}</strong><br> için <strong>{{schedule.date}} tarihine
+                                   {{schedule.starting_time}}-{{schedule.finishing_time}} saatleri arasına oluşturulmuştur.</strong></p>
+                            <a href="" disabled class="btn btn-primary view-inv-btn">Fatura</a><br><br>
+                            <p style="font-size: 12px;">Faturanız doktorunuzun onayından sonra aktifleşecektir</p>
+                        </div>
+                    </div>
+                </div> 
+                
+                <!-- /Success Card -->
+                {% elif fail %}
+                <div class="card danger-card">
+                    <div class="card-body">
+                        <div class="success-cont">
+                            <i style="background-color: red;"  class="far fa-times-circle"></i>
+                            <h3>Ödemenizi alamıyoruz.Lütfen kart bilgilerin doğru ve eksiksiz girildiğinden emin olunuz.</h3>
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- /Page Content -->
+
+
+
+
+{% endblock content %}

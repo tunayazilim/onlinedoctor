@@ -1,0 +1,293 @@
+
+{% extends 'base.html' %}
+
+{% load booking_dates %}
+
+
+{% block content %}
+	
+
+	
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index-2.html">Anasayfa</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Randevu Alma</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Randevu Alma</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container">
+				
+					<div class="row">
+						<div class="col-12">
+						
+							<div class="card">
+								<div class="card-body">
+									<div class="booking-doc-info">
+										<a href="{% url 'showDoctorProfile' doctor.slug %}" class="booking-doc-img">
+											<img src="{{doctor.image.url}}" alt="User Image">
+										</a>
+										<div class="booking-info">
+											<h4><a href="{% url 'showDoctorProfile' doctor.slug %}">{{doctor.get_doctor_name}}</a></h4>
+											<div class="rating">
+												{% if doctor.average_star != 0 %}
+													{% for i in doctor.average_star|rjust:doctor.average_star %}	
+														<i class="fas fa-star filled"></i>
+													{% endfor %}
+												{% endif %}
+												{% if doctor.none_average_star != 0 %}
+													{% for i in doctor.none_average_star|rjust:doctor.none_average_star %}	
+														<i class="fas fa-star"></i>
+													{% endfor %} 
+												{% endif %}
+												<span class="d-inline-block average-rating">({{doctor.countOfPublishedComments}})</span>
+												
+											</div>
+											<p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i> {% if doctor.city or doctor.country %}
+												{{doctor.city}}, {{doctor.country}}
+											{% else %}
+											Konum Belirtilmemiş
+											{% endif %}</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<!-- Schedule Widget -->
+							<div class="card booking-schedule schedule-widget">
+							
+								<!-- Schedule Header -->
+								<div class="schedule-header">
+									<div class="row">
+										<div class="col-md-12">
+										
+											<!-- Day Slot -->
+											<div class="day-slot">
+												<ul>
+													<li class="left-arrow">
+														<a href="#">
+															<i class="fa fa-chevron-left"></i>
+														</a>
+													</li>
+
+													
+													
+													{% for day in days %}
+														{% dates day as dayName %}
+														<li>
+															<span>{{day}}</span>
+															<span class="slot-date">{{dayName}}</span>
+														</li>
+													{% endfor %}
+														
+													
+													
+													<li class="right-arrow">
+														<a href="#">
+															<i class="fa fa-chevron-right"></i>
+														</a>
+													</li>
+												</ul>
+											</div>
+											<!-- /Day Slot -->
+											
+										</div>
+									</div>
+								</div>
+								<!-- /Schedule Header -->
+								
+								<!-- Schedule Content -->
+								<div class="schedule-cont">
+									<div class="row">
+										<div class="col-md-12">
+										
+											<!-- Time Slot -->
+											<div class="time-slot">
+												<ul class="clearfix">
+													<li>
+														
+														
+														{% if schedules1 %}
+															{% for schedule in schedules1 %}
+																
+																
+																	<a 
+																	{% if schedule.is_paid == "no" %}														
+																		onclick="clicked(this)" {% else %} style="text-decoration: line-through;" {% endif %}
+																	 class="timing"  id="{{schedule.pk}}"   href="#">
+																		<span>{{schedule.starting_time}} - {{schedule.finishing_time}}</span>
+																	</a>
+																
+																	
+																
+															{% endfor %}
+														{% else %}
+																<center>-</center>
+														{% endif %}
+															
+															
+													</li>
+													<li>
+														
+														{% if schedules2 %}
+															{% for schedule in schedules2 %}
+																<a {% if schedule.is_paid == "no" %}														
+																onclick="clicked(this)" {% else %} style="text-decoration: line-through;"  {% endif %} id="{{schedule.pk}}" class="timing" href="#">
+																	<span>{{schedule.starting_time}} - {{schedule.finishing_time}}</span>
+																</a>
+																
+															{% endfor %}
+														{% else %}
+															<center>-</center>
+														{% endif %}
+														
+													</li>
+													<li>
+														{% if schedules3 %}
+															{% for schedule in schedules3 %}
+																<a {% if schedule.is_paid == "no"  %}														
+																onclick="clicked(this)" {% else %} style="text-decoration: line-through;"  {% endif %} id="{{schedule.pk}}" class="timing" href="#">
+																	<span>{{schedule.starting_time}} - {{schedule.finishing_time}}</span>
+																</a>
+																
+															{% endfor %}
+														{% else %}
+															<center>-</center>
+														{% endif %}
+													</li>
+													<li>
+														{% if schedules4 %}
+															{% for schedule in schedules4 %}
+																<a {% if schedule.is_paid == "no" %}														
+																onclick="clicked(this)" {% else %} style="text-decoration: line-through;"  {% endif %} id="{{schedule.pk}}" class="timing" href="#">
+																	<span>{{schedule.starting_time}} - {{schedule.finishing_time}}</span>
+																</a>
+																
+															{% endfor %}
+														{% else %}
+															<center>-</center>
+														{% endif %}
+													</li>
+													<li>
+														{% if schedules5 %}
+															{% for schedule in schedules5 %}
+																<a {% if schedule.is_paid == "no" %}														
+																onclick="clicked(this)" {% else %} style="text-decoration: line-through;"  {% endif %} id="{{schedule.pk}}" class="timing" href="#">
+																	<span>{{schedule.starting_time}} - {{schedule.finishing_time}}</span>
+																</a>
+																
+															{% endfor %}
+														{% else %}
+															<center>-</center>
+														{% endif %}
+													</li>
+													<li>
+														
+														{% if schedules6 %}
+															{% for schedule in schedules6 %}
+																<a class="timing" {% if schedule.is_paid == "no" %}														
+																onclick="clicked(this)" {% else %} style="text-decoration: line-through;"  {% endif %} id="{{schedule.pk}}" href="#">
+																	<span>{{schedule.starting_time}} - {{schedule.finishing_time}}</span>
+																</a>
+																
+															{% endfor %}
+														{% else %}
+															<center>-</center>
+														{% endif %}
+															
+													</li>
+													<li>
+														
+														{% if schedules7 %}
+															{% for schedule in schedules7 %}
+																<a {% if schedule.is_paid == "no" %}														
+																onclick="clicked(this)" {% else %} style="text-decoration: line-through;"  {% endif %} id="{{schedule.pk}}" class="timing" href="#">
+																	<span>{{schedule.starting_time}} - {{schedule.finishing_time}}</span>
+																</a>
+																
+															{% endfor %}
+														{% else %}
+															<center>-</center>
+														{% endif %}
+															
+													</li>
+												</ul>
+											</div>
+											<!-- /Time Slot -->
+											
+										</div>
+									</div>
+								</div>
+								<!-- /Schedule Content -->
+								
+							</div>
+							<!-- /Schedule Widget -->
+							
+							<!-- Submit Section -->
+							<div class="submit-section proceed-btn text-right">
+								<button onclick="goPaymentPage();"  id="ödemeButonu" disabled class="btn btn-primary submit-btn">Ödeme Sayfasına Git</button>
+							</div>
+							<!-- /Submit Section -->
+
+								<input type="hidden" value=""  id="currentIdClass">
+
+							<script>
+
+								var hiddenInputId=document.getElementById("currentIdClass");
+
+								function goPaymentPage(){
+									var url = "{% url 'checkout' 123 %}";
+									var idofsecret=hiddenInputId.value;
+									document.location.href = url.replace('123', idofsecret);
+								}
+
+								var btn=document.getElementById("ödemeButonu");
+								function clicked(element){
+
+									hiddenInputId.value=element.id;
+									
+									
+									var items = document.getElementsByClassName('timing selected');
+									for (var i = 0; i < items.length; i++) {
+										if(items[i]!=element){
+											items[i].className="timing";
+										}
+										
+									}
+								
+									
+									if(element.className=="timing"){
+										element.className="timing selected";
+										btn.disabled=false;
+									}else{
+										element.className="timing";
+										btn.disabled=true;
+									}
+									
+								}
+
+
+							</script>
+							
+						</div>
+					</div>
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			
+			{% endblock content %}

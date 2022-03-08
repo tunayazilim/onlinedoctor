@@ -1,0 +1,384 @@
+{% extends 'base.html' %}
+	
+	
+
+
+{% load static %}
+
+			
+			{% block content %}
+				
+			
+				
+			{{ timeSchedule.pk|json_script:"timeSchedulePk" }}
+
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index-2.html">Anasayfa</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Ödeme Sayfası</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Ödeme Sayfası</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+
+
+
+
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container">
+
+					<div class="row">
+						<div class="col-md-7 col-lg-8">
+							<div class="card">
+								<div class="card-body">
+
+
+								
+									<!-- Checkout Form -->
+									<form action="/odeme-yap/{{timeSchedule.pk}}?method=ozel-form" method="POST">
+									{% csrf_token %}
+										<!-- Personal Information -->
+										<div class="info-widget">
+											<h4 id="titleInfo" class="card-title">Kişisel Bilgiler</h4>
+											<div id="mainInformations" class="row">
+												<div class="col-md-6 col-sm-12">
+													<div class="form-group card-label">
+														<label>İsim</label>
+														<input class="form-control" value="{{request.user.first_name}}" disabled type="text">
+													</div>
+												</div>
+												<div class="col-md-6 col-sm-12">
+													<div class="form-group card-label">
+														<label>Soyisim</label>
+														<input class="form-control" value="{{request.user.last_name}}" disabled type="text">
+													</div>
+												</div>
+												<div class="col-md-6 col-sm-12">
+													<div class="form-group card-label">
+														<label>Mail</label>
+														<input class="form-control" value="{{request.user.email}}" disabled type="email">
+													</div>
+												</div>
+												<div class="col-md-6 col-sm-12">
+													<div class="form-group card-label">
+														<label>Telefon</label>
+														<input class="form-control" value="{{request.user.phone_number}}" disabled type="text">
+													</div>
+												</div>
+											</div> 
+											<label class="payment-radio credit-card-option">
+												<input onclick="controlRadio();" type="radio" id="myInformation" name="radio" checked>
+												<span class="checkmark"></span>
+												Kendi bilgilerimi kullanmak istiyorum
+											</label>
+											<label class="payment-radio credit-card-option">
+												<input onclick="controlRadio();" id="rumuzInformation" type="radio" name="radio" >
+												<span class="checkmark"></span>
+												Rumuz kullanmak istiyorum
+											</label>
+											<!-- <div class="exist-customer">İletişim Şeklinizi Belirtiniz </div> -->
+											
+										</div>
+										<!-- /Personal Information -->
+
+
+
+
+
+
+
+
+										
+											<div class="card">
+												<div class="card-header">
+													<h4 class="card-title">Görüşme Platformu Seçiniz</h4>
+												</div>
+												<div class="card-body">
+													<ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified">
+														<li onclick="changeMeetingMethod('ourSystem')" class="nav-item"><a style="font-size: 13px;" class="nav-link" href="#solid-rounded-justified-tab0" data-toggle="tab">Kendi Sistemimiz <br><img src="{% static 'assets/img/favicon.png' %}" width="20%" alt=""></a></li>
+														<li onclick="changeMeetingMethod('Whatsapp')" class="nav-item"><a class="nav-link active" href="#solid-rounded-justified-tab1" data-toggle="tab">Whatsapp  <br><i class="fa fa-whatsapp fa-2x"></i></a></li>
+														<li onclick="changeMeetingMethod('Zoom')" class="nav-item"><a class="nav-link" href="#solid-rounded-justified-tab2" data-toggle="tab">Zoom  <br><i class="fas fa-video fa-2x"></i></a></li>
+														<li onclick="changeMeetingMethod('Skype')" class="nav-item"><a class="nav-link" href="#solid-rounded-justified-tab3" data-toggle="tab">Skype  <br><i class="fab fa-skype fa-2x"></i></a></li>
+														
+														
+													</ul>
+													<div class="tab-content">
+														<div class="tab-pane" id="solid-rounded-justified-tab0">
+															
+														</div>
+														<div class="tab-pane show active" id="solid-rounded-justified-tab1">
+															<input class="form-control" disabled value="{{request.user.iletisimSettings.first.whatsapp}}" type="text">
+														</div>
+														<div class="tab-pane" id="solid-rounded-justified-tab2">
+															<input class="form-control" disabled value="{{request.user.iletisimSettings.first.zoom}}" type="text">
+														</div>
+														<div class="tab-pane" id="solid-rounded-justified-tab3">
+															<input class="form-control" disabled value="{{request.user.iletisimSettings.first.skype}}" type="text">
+														</div>
+													</div>
+													<br>
+													<p style="font-size: 12px; color: green;">Bu bilgileri iletişim ayarları kısmından değiştirebilirsiniz</p>
+												</div>
+											</div>
+										
+
+
+
+											<input type="hidden" name="meetingMethod" value="Whatsapp" id="meetingMethod">
+											
+
+
+
+
+
+
+
+										
+										<div class="payment-widget">
+											<h4 class="card-title">Kart Bilgileriz</h4>
+											
+											<!-- Credit Card Payment -->
+											<div class="payment-list">
+												<!-- <label class="payment-radio credit-card-option">
+													<input type="radio" name="radio" checked>
+													<span class="checkmark"></span>
+													Credit card
+												</label> -->
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group card-label">
+															<label for="card_name">Kart üzerindeki isim</label>
+															<input class="form-control" required name="card_name" id="card_name" type="text">
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group card-label">
+															<label for="card_number">Kart Numarası</label>
+															<input inputmode="numeric" class="form-control" required id="card_number" name="card_number" placeholder="1234  5678  9876  5432" type="text">
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group card-label">
+															<label for="expiry_month">Son Kullanma Ayı</label>
+															<input class="form-control" inputmode="numeric" date="true" required id="expiry_month" name="expiry_month" placeholder="MM" type="text">
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group card-label">
+															<label for="expiry_year">Son Kullanma Yılı</label>
+															<input class="form-control" required id="expiry_year" inputmode="numeric" date="true" name="expiry_year" placeholder="YY" type="text">
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group card-label">
+															<label for="cvv">CVV</label>
+															<input class="form-control" inputmode="numeric" required id="cvv" name="cvv" type="text">
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- /Credit Card Payment -->
+											
+											<!-- Paypal Payment -->
+											<!-- <div class="payment-list">
+												<label class="payment-radio paypal-option">
+													<input type="radio" name="radio">
+													<span class="checkmark"></span>
+													Paypal
+												</label>
+											</div> -->
+											<!-- /Paypal Payment -->
+											
+											<!-- Terms Accept -->
+											<!-- <div class="terms-accept">
+												<div class="custom-checkbox">
+												   <input type="checkbox" id="terms_accept">
+												   <label for="terms_accept"><a href="#">Hüküm &amp; Koşullulukları okudum</a> onaylıyorum ve  kabul ediyorum.</label>
+												</div>
+											</div> -->
+											<!-- /Terms Accept -->
+											
+											<!-- Submit Section -->
+											<div class="submit-section mt-4">
+												<button type="submit" class="btn btn-primary submit-btn">Onayla ve Öde</button>
+												<a href="/odeme-yap/{{timeSchedule.pk}}?method=iyzico&meetingMethod=Whatsapp" style="float: right;" id="iyzicoButton" type="button" class="btn btn-primary submit-btn">Iyzico ile Öde</a>
+											</div>
+											
+											<!-- /Submit Section -->
+											
+										</div>
+									</form>
+									<!-- /Checkout Form -->
+									
+								</div>
+							</div>
+							
+						</div>
+						
+						<div class="col-md-5 col-lg-4 theiaStickySidebar">
+						
+							<!-- Booking Summary -->
+							<div class="card booking-card">
+								<div class="card-header">
+									<h4 class="card-title">Randevu Bilgileri</h4>
+								</div>
+								<div class="card-body">
+								
+									<!-- Booking Doctor Info -->
+									<div class="booking-doc-info">
+										<a href="doctor-profile.html" class="booking-doc-img">
+											<img src="{{timeSchedule.doctor.image.url}}" alt="User Image">
+										</a>
+										<div class="booking-info">
+											<h4><a href="{% url 'showDoctorProfile' timeSchedule.doctor.slug %}">{{timeSchedule.doctor.unvan}}&nbsp;{{timeSchedule.doctor.get_full_name}}</a></h4>
+											<div class="rating">
+												{% if timeSchedule.doctor.average_star != 0 %}
+													{% for i in timeSchedule.doctor.average_star|rjust:timeSchedule.doctor.average_star %}
+													<i class="fas fa-star filled"></i>
+													{% endfor %}
+													{% endif %}
+													{% if timeSchedule.doctor.none_average_star != 0 %}
+													{% for i in timeSchedule.doctor.none_average_star|rjust:timeSchedule.doctor.none_average_star %}
+													<i class="fas fa-star"></i>
+													{% endfor %}
+												{% endif %}
+												<span class="d-inline-block average-rating">({{commentsCount}})</span>
+											</div>
+											<div class="clinic-details">
+												<p class="doc-location"><i class="fas fa-map-marker-alt"></i>{% if timeSchedule.doctor.city or timeSchedule.doctor.country %}
+													{{timeSchedule.doctor.city}}, {{timeSchedule.doctor.country}}
+													{% else %}
+													Konum Belirtilmemiş
+													{% endif %}</p>
+											</div>
+										</div>
+									</div>
+									<!-- Booking Doctor Info -->
+									
+									<div class="booking-summary">
+										<div class="booking-item-wrap">
+											<ul class="booking-date">
+												<li>Tarih <span>{{timeSchedule.date}}</span></li>
+												<li>Saat <span>{{timeSchedule.starting_time}}-{{timeSchedule.finishing_time}}</span></li>
+											</ul>
+											<ul class="booking-fee">
+												<li>Danışma Ücreti <span>{% if timeSchedule.doctor.is_free %}
+													Ücretsiz
+													{% else %}
+													{{timeSchedule.doctor.custom_price }} ₺
+													{% endif %}</span></li>
+												<li>Seans Süresi <span>{{timeSchedule.doctor.appointment_minute }} dakika</span></li>
+												
+											</ul>
+											<div class="booking-total">
+												<ul class="booking-total-list">
+													<li>
+														<span>Toplam</span>
+														<span class="total-cost">{{timeSchedule.doctor.custom_price }} ₺</span>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /Booking Summary -->
+							
+						</div>
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+
+
+
+			<script>
+
+					function changeMeetingMethod(meetingValue){
+						document.getElementById("meetingMethod").value=meetingValue;
+						var url_str=document.getElementById("iyzicoButton").href;
+						var url = new URL(url_str);
+						url.searchParams.set('meetingMethod',meetingValue);
+						document.getElementById("iyzicoButton").href=url.href;
+					}
+
+					var mainInformationsArea=document.getElementById("mainInformations");
+					var inforTitle=document.getElementById("titleInfo");
+
+
+					function controlRadio(){
+						if(document.getElementById('myInformation').checked) {
+						
+						inforTitle.textContent="Kişisel Bilgiler";
+						mainInformationsArea.innerHTML=`
+										
+												<div class="col-md-6 col-sm-12">
+													<div class="form-group card-label">
+														<label>İsim</label>
+														<input class="form-control" value="{{request.user.first_name}}" disabled type="text">
+													</div>
+												</div>
+												<div class="col-md-6 col-sm-12">
+													<div class="form-group card-label">
+														<label>Soyisim</label>
+														<input class="form-control" value="{{request.user.last_name}}" disabled type="text">
+													</div>
+												</div>
+												<div class="col-md-6 col-sm-12">
+													<div class="form-group card-label">
+														<label>Mail</label>
+														<input class="form-control" value="{{request.user.email}}" disabled type="email">
+													</div>
+												</div>
+												<div class="col-md-6 col-sm-12">
+													<div class="form-group card-label">
+														<label>Telefon</label>
+														<input class="form-control" value="{{request.user.phone_number}}" disabled type="text">
+													</div>
+												</div>
+										`
+
+
+					}else if(document.getElementById('rumuzInformation').checked) {
+						inforTitle.textContent="Rumuz Kullan";
+					
+						mainInformationsArea.innerHTML=`
+										
+												<div class="col-md-6 col-sm-12">
+													<div class="form-group card-label">
+														<label>Rumuz</label>
+														<input class="form-control" type="text">
+													</div>
+												</div>
+												
+											`
+					}
+
+					}
+
+
+
+
+			</script>
+
+
+
+
+
+
+   
+			{% endblock content %}

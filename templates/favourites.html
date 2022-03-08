@@ -1,0 +1,130 @@
+
+			{% extends 'base.html' %}
+
+			
+			{% block content %}
+				
+		
+				
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Anasayfa</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Favori Doktorlarım</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Favori Doktorlarım</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			<br>
+
+			{% if messages %}
+							<ul class="messages">
+								{% for message in messages %}
+					
+								{% if 'success' in message.tags and "removefavourite" in message.extra_tags %}
+								<div class="alert alert-success" role="alert">
+					
+									<center><strong>{{message}}</strong></center>
+								</div>
+								
+								{% endif %}
+					
+								{% endfor %}
+							</ul>
+			{% endif %}
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+
+
+							{% include 'profile-sidebar.html' %}
+
+						<div class="col-md-7 col-lg-8 col-xl-9">
+							{% if doctors %}
+							<div class="row row-grid">
+									{% for doctor in doctors %}
+										<div class="col-md-6 col-lg-4 col-xl-3">
+											<div class="profile-widget">
+												<div class="doc-img">
+													<a href="{% url 'showDoctorProfile' doctor.doctor.slug %}">
+														<img class="img-fluid" alt="User Image" src="{{doctor.doctor.image.url}}">
+													</a>
+													<a href="{% url 'removeFavouritesOfPatients' doctor.doctor.slug %}" class="fav-btn">
+														<i class="far fa-bookmark"></i>
+													</a>
+												</div>
+												<div class="pro-content">
+													<h3 class="title">
+														<a href="doctor-profile.html">{{doctor.doctor.unvan}} {{doctor.doctor.get_full_name}}</a> 
+														<i class="fas fa-check-circle verified"></i>
+													</h3>
+													<p class="speciality">{{doctor.doctor.define_profession}}</p>
+													<div class="rating">
+														{% if doctor.doctor.average_star != 0 %}
+															{% for i in doctor.doctor.average_star|rjust:doctor.doctor.average_star %}	
+																<i class="fas fa-star filled"></i>
+															{% endfor %}
+														{% endif %}
+														{% if doctor.doctor.none_average_star != 0 %}
+															{% for i in doctor.doctor.none_average_star|rjust:doctor.doctor.none_average_star %}	
+																<i class="fas fa-star"></i>
+															{% endfor %} 
+														{% endif %}
+											<span class="d-inline-block average-rating">({{doctor.doctor.countOfPublishedComments}})</span>
+													</div>
+													<ul class="available-info">
+														<li>
+															<i class="fas fa-map-marker-alt"></i> {% if doctor.doctor.city or doctor.doctor.country %}
+															{{doctor.doctor.city}}, {{doctor.doctor.country}}
+														{% else %}
+														Konum Belirtilmemiş
+														{% endif %}
+														</li>
+														<li>
+															<i class="far fa-clock"></i> Available on Fri, 22 Mar
+														</li>
+														<li>
+															<i class="far fa-money-bill-alt"></i> 
+															{% if doctor.doctor.is_free %}
+																Ücretsiz
+															{% else %}
+															   {{doctor.doctor.custom_price }} ₺ ({{doctor.doctor.appointment_minute }} dakika)
+															{% endif %}
+																
+															<!-- <i class="fas fa-info-circle" data-toggle="tooltip" title="Seans Ücreti"></i> -->
+														</li>
+													</ul>
+													<div class="row row-sm">
+														<div class="col-6">
+															<a href="{% url 'showDoctorProfile' doctor.doctor.slug %}" class="btn view-btn">Profile Bak</a>
+														</div>
+														<div class="col-6">
+															<a href="booking.html" class="btn book-btn">Randevu Al</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									{% endfor %}
+							</div>
+							{% else %}
+								<center><p>Henüz favorilerinize eklediğiniz doktor bulunmamaktadır</p></center>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			{% endblock content %}
