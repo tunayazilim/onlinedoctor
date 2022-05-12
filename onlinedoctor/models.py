@@ -12,7 +12,7 @@ from datetime import date, timedelta
 from ckeditor_uploader.fields import RichTextUploadingField
 from ckeditor.fields import RichTextField
 from PIL import Image
-
+from django.core.files.storage import default_storage as storage
 # from .views import getDayEnglish
 
 # Create your models here.
@@ -142,23 +142,19 @@ class CustomUserModel(AbstractUser):
     
 
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        img=Image.open(self.image.path)
-        output_size = (300,300)
-        img.thumbnail(output_size)
-        img.save(self.image.path)
-
-
     # def save(self, *args, **kwargs):
-    #     if self.image:
-    #         self.image = get_thumbnail(self.image, '230x230', quality=75)
-    #     super(CustomUserModel, self).save(*args, **kwargs)
+    #     super().save(*args, **kwargs)
+    #     img=Image.open(self.image.path)
+    #     resized_image = img.resize((300, 300), Image.ANTIALIAS)
+    #     fh = storage.open(self.image.name, "wb")
+    #     picture_format = 'png'
+    #     resized_image.save(fh, picture_format)
+    #     fh.close()        
+    #     # output_size = (300,300)
+    #     # img.thumbnail(output_size)
+    #     # img.save(self.image.path)
 
 
-
-    # def calculateAge(request,self):
-    #     return now().year - ExtractYear(self.date_of_birth)
 
     @property
     def countOfPublishedComments(self):
