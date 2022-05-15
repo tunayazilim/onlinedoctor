@@ -3,7 +3,6 @@ import uuid
 from onlinedoctor.models import CustomUserModel, appointmentModel
 from io import BytesIO
 import sys
-from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
