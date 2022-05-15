@@ -11,7 +11,6 @@ from django.utils.timezone import now
 from datetime import date, timedelta
 from ckeditor_uploader.fields import RichTextUploadingField
 from ckeditor.fields import RichTextField
-#from PIL import Image
 from django.core.files.storage import default_storage as storage
 # from .views import getDayEnglish
 
