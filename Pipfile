@@ -70,6 +70,7 @@ Pillow = "==8.3.1"
 PyJWT = "==2.3.0"
 pyOpenSSL = "==21.0.0"
 Twisted = "==21.7.0"
+gunicorn = "*"
 
 [dev-packages]
 
